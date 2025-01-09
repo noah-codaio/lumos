@@ -16,20 +16,27 @@ export interface DynamicRewrite {
 }
 
 export class CompletionService {
-  private readonly openai: OpenAI;
+  private openai: OpenAI;
   private readonly cache: Map<string, CacheEntry>;
   private readonly inlineCache: Map<string, InlineCompletion>;
   private readonly suggestionCache: Map<string, SuggestionCacheEntry>;
   private readonly CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
-  constructor() {
+  constructor(apiKey?: string) {
     this.openai = new OpenAI({
-      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      apiKey: apiKey || '',
       dangerouslyAllowBrowser: true
     });
     this.cache = new Map();
     this.inlineCache = new Map();
     this.suggestionCache = new Map();
+  }
+
+  updateApiKey(apiKey: string) {
+    this.openai = new OpenAI({
+      apiKey,
+      dangerouslyAllowBrowser: true
+    });
   }
 
   /**

@@ -1,24 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Editor from './components/Editor';
+import ApiKeyInput from './components/ApiKeyInput';
+import { completionService } from './services/CompletionService';
 
-function App() {
+const App: React.FC = () => {
+  const [hasApiKey, setHasApiKey] = useState(false);
+
+  const handleApiKeySubmit = (apiKey: string) => {
+    completionService.updateApiKey(apiKey);
+    setHasApiKey(true);
+  };
+
   return (
     <div className="app">
-      <header>
-        <h1 style={{ 
-          fontSize: '1.125rem', 
-          fontWeight: 500,
-          color: 'var(--text-light)',
-          marginBottom: '2rem'
-        }}>
-          Lumos
-        </h1>
-      </header>
-      <main>
+      {!hasApiKey ? (
+        <ApiKeyInput onSubmit={handleApiKeySubmit} />
+      ) : (
         <Editor />
-      </main>
+      )}
     </div>
   );
-}
+};
 
 export default App; 
