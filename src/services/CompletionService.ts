@@ -1,15 +1,9 @@
 import OpenAI from 'openai';
-import { Rewrites, CacheEntry, InlineCompletion, TextSuggestion, SuggestionCacheEntry } from '../types/completion';
+import { Rewrites, CacheEntry, InlineCompletion, TextSuggestion, SuggestionCacheEntry, RewriteSuggestion } from '../types/completion';
 
 /**
  * Service for handling text completions and rewrites using OpenAI's API
  */
-export interface RewriteSuggestion {
-  key: string;
-  label: string;
-  description: string;
-}
-
 export interface DynamicRewrite {
   type: string;
   content: string;

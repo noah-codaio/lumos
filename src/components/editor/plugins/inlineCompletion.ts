@@ -32,8 +32,16 @@ export const completionState = StateField.define<{decorations: DecorationSet, co
   },
   update(state, tr) {
     let { decorations, completion } = state;
+
+    // Clear completion if user types something else
+    if (tr.docChanged && !tr.annotation(Transaction.remote)) {
+      return { decorations: Decoration.none, completion: null };
+    }
+
+    // Map decorations through document changes
     decorations = decorations.map(tr.changes);
 
+    // Handle effects
     for (let e of tr.effects) {
       if (e.is(addCompletion)) {
         const widget = Decoration.widget({
@@ -50,18 +58,13 @@ export const completionState = StateField.define<{decorations: DecorationSet, co
           }(e.value.completion),
           side: 1  // Show after cursor
         });
-        decorations = Decoration.set([widget.range(e.value.from)]);
-        completion = e.value.completion;
+        return {
+          decorations: Decoration.set([widget.range(e.value.from)]),
+          completion: e.value.completion
+        };
       } else if (e.is(clearCompletions)) {
-        decorations = Decoration.none;
-        completion = null;
+        return { decorations: Decoration.none, completion: null };
       }
-    }
-    
-    // Clear completion if user types something else
-    if (tr.docChanged && !tr.annotation(Transaction.remote)) {
-      decorations = Decoration.none;
-      completion = null;
     }
 
     return { decorations, completion };
@@ -71,28 +74,12 @@ export const completionState = StateField.define<{decorations: DecorationSet, co
 
 // Plugin to handle inline completions
 export const inlineCompletionPlugin = ViewPlugin.fromClass(class {
-  completionTimeout: number | null = null;
-  lastPos: number = -1;
+  private lastPos: number = -1;
+  private timeoutHandle: number | null = null;
 
-  constructor(view: EditorView) {}
+  constructor(readonly view: EditorView) {}
 
   update(update: ViewUpdate) {
-    // Clear timeout if we have one
-    if (this.completionTimeout) {
-      window.clearTimeout(this.completionTimeout);
-      this.completionTimeout = null;
-    }
-
-    // Clear completions if cursor moves without document changes (clicks, arrow keys, etc)
-    if (update.selectionSet && !update.docChanged) {
-      setTimeout(() => {
-        update.view.dispatch({
-          effects: clearCompletions.of(null)
-        });
-      }, 0);
-      return;
-    }
-
     // Don't proceed if no changes or selection changes
     if (!update.docChanged && !update.selectionSet) {
       return;
@@ -103,12 +90,31 @@ export const inlineCompletionPlugin = ViewPlugin.fromClass(class {
     if (pos === this.lastPos) return;
     this.lastPos = pos;
 
+    // Clear completions if cursor moves without document changes (clicks, arrow keys, etc)
+    if (update.selectionSet && !update.docChanged) {
+      // Schedule the clear for next tick
+      Promise.resolve().then(() => {
+        if (this.view.state.selection.main.head === pos) {
+          this.view.dispatch({
+            effects: clearCompletions.of(null)
+          });
+        }
+      });
+      return;
+    }
+
+    // Clear any existing timeout
+    if (this.timeoutHandle !== null) {
+      window.clearTimeout(this.timeoutHandle);
+    }
+
     // Set new timeout for completion
-    this.completionTimeout = window.setTimeout(async () => {
+    this.timeoutHandle = window.setTimeout(async () => {
       // Recheck selection state before completing
-      const currentState = update.view.state;
+      const currentState = this.view.state;
       if (!currentState.selection.main.empty) return;
 
+      const pos = currentState.selection.main.head;
       const line = currentState.doc.lineAt(pos);
       const text = line.text.slice(0, pos - line.from);
 
@@ -148,19 +154,27 @@ export const inlineCompletionPlugin = ViewPlugin.fromClass(class {
         const documentContext = contextLines.join('\n');
         const completion = await completionService.getInlineCompletion(text, documentContext);
         
-        // Final selection check before dispatching
-        if (completion && !update.view.state.selection.main.empty) return;
-        if (completion) {
-          update.view.dispatch({
-            effects: addCompletion.of({ 
-              from: pos,
-              completion 
-            })
-          });
-        }
+        // Schedule the update for next tick and verify state hasn't changed
+        Promise.resolve().then(() => {
+          const finalState = this.view.state;
+          if (finalState.selection.main.head === pos && completion) {
+            this.view.dispatch({
+              effects: addCompletion.of({ 
+                from: pos,
+                completion 
+              })
+            });
+          }
+        });
       } catch (error) {
         console.error('Error getting inline completion:', error);
       }
     }, DEBOUNCE_MS);
+  }
+
+  destroy() {
+    if (this.timeoutHandle !== null) {
+      window.clearTimeout(this.timeoutHandle);
+    }
   }
 }); 

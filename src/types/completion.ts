@@ -1,4 +1,18 @@
 /**
+ * Represents a rewrite suggestion
+ */
+export interface RewriteSuggestion {
+  /** The key for the suggestion (e.g., 'a', 'b', 'custom') */
+  key: string;
+  /** The label to show in the UI */
+  label: string;
+  /** Description of what this rewrite will do */
+  description: string;
+  /** Optional preview text */
+  preview?: string;
+}
+
+/**
  * Represents different versions of rewritten text
  */
 export interface Rewrites {

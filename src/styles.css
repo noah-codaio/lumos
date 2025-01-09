@@ -193,18 +193,34 @@ body {
 .cm-text-suggestion {
   position: relative;
   display: inline;
+  white-space: inherit !important;
+  word-break: inherit !important;
+  line-height: inherit !important;
+  pointer-events: auto;
 }
 
 .cm-text-suggestion-spelling {
-  border-bottom: 2px dotted #e74c3c;
+  border-bottom: 2px dotted #e74c3c !important;
+  text-decoration: none;
+  padding-bottom: 1px;
+  background: transparent;
+  z-index: 1;
 }
 
 .cm-text-suggestion-grammar {
-  border-bottom: 2px dotted #f39c12;
+  border-bottom: 2px dotted #f39c12 !important;
+  text-decoration: none;
+  padding-bottom: 1px;
+  background: transparent;
+  z-index: 1;
 }
 
 .cm-text-suggestion-style {
-  border-bottom: 2px dotted #3498db;
+  border-bottom: 2px dotted #3498db !important;
+  text-decoration: none;
+  padding-bottom: 1px;
+  background: transparent;
+  z-index: 1;
 }
 
 .cm-suggestion-tooltip {
@@ -218,6 +234,8 @@ body {
   margin-top: 8px;
   animation: fadeIn 0.2s ease;
   max-width: 300px;
+  white-space: normal !important;
+  pointer-events: auto;
 }
 
 .cm-suggestion-tooltip::before {

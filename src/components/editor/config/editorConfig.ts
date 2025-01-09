@@ -12,6 +12,8 @@ import { markdown } from '@codemirror/lang-markdown';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { tags as t } from '@lezer/highlight';
 import { hideMarkdownPlugin } from '../plugins/hideMarkdown';
+import { customRewriteState } from '../state/customRewrite';
+import { selectionTrackerPlugin } from '../plugins/selectionTracker';
 
 const DEBOUNCE_MS = 500;
 
@@ -41,12 +43,17 @@ export const createEditorConfig = (
   editorRef: React.MutableRefObject<HTMLDivElement | null>,
   completionTimeoutRef: React.MutableRefObject<number | null>
 ): Extension[] => {
+  // Create a separate timeout ref for rewrite completions
+  const rewriteTimeoutRef = { current: null as number | null };
+
   return [
     basicSetup,
     markdown(),
     syntaxHighlighting(markdownHighlighting),
     hideMarkdownPlugin,
     keymap.of(defaultKeymap),
+    customRewriteState,
+    selectionTrackerPlugin,
     tooltips({
       position: 'absolute',
       parent: editorRef.current || undefined,
@@ -87,7 +94,7 @@ export const createEditorConfig = (
     inlineCompletionPlugin,
     textSuggestionPlugin,
     autocompletion({
-      override: [createRewriteCompletions(completionTimeoutRef)],
+      override: [createRewriteCompletions(rewriteTimeoutRef)],
       defaultKeymap: true,
       icons: false,
       closeOnBlur: false,
