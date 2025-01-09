@@ -8,6 +8,75 @@ import { setCustomRewrite, customRewriteState } from '../state/customRewrite';
 let customRewriteTimeout: number | null = null;
 
 /**
+ * Expands the selected text using AI
+ */
+const expandText = (view: EditorView): boolean => {
+  const selection = view.state.selection.main;
+  if (selection.empty) return false;
+
+  const selectedText = view.state.sliceDoc(selection.from, selection.to);
+  
+  // Start the async operation but return immediately
+  (async () => {
+    try {
+      const expanded = await completionService.getRewrite(
+        selectedText,
+        'expand|Moderately expand this text by:\n' +
+        '- Adding selective supporting details\n' +
+        '- Clarifying key points where needed\n' +
+        '- Including helpful context where appropriate\n' +
+        '- Making language more descriptive but not verbose\n' +
+        'The result should be about 50% longer than the original while maintaining its core message and conciseness.'
+      );
+      if (expanded) {
+        view.dispatch({
+          changes: { from: selection.from, to: selection.to, insert: expanded }
+        });
+      }
+    } catch (error) {
+      console.error('Error expanding text:', error);
+    }
+  })();
+
+  return true;
+};
+
+/**
+ * Shortens/summarizes the selected text using AI
+ */
+const shortenText = (view: EditorView): boolean => {
+  const selection = view.state.selection.main;
+  if (selection.empty) return false;
+
+  const selectedText = view.state.sliceDoc(selection.from, selection.to);
+  
+  // Start the async operation but return immediately
+  (async () => {
+    try {
+      const shortened = await completionService.getRewrite(
+        selectedText,
+        'shorten|Condense this text to roughly half its current length by:\n' +
+        '- Removing redundant information\n' +
+        '- Using fewer words to express the same ideas\n' +
+        '- Focusing on the most important points\n' +
+        '- Eliminating unnecessary modifiers and filler words\n' +
+        '- Maintaining clarity while being brief\n' +
+        'The result should be approximately 50% of the original length while preserving its key message.'
+      );
+      if (shortened) {
+        view.dispatch({
+          changes: { from: selection.from, to: selection.to, insert: shortened }
+        });
+      }
+    } catch (error) {
+      console.error('Error shortening text:', error);
+    }
+  })();
+
+  return true;
+};
+
+/**
  * Creates keyboard shortcuts for rewrite commands
  * @returns Array of keyboard command configurations
  */
@@ -93,7 +162,18 @@ export const createRewriteShortcuts = (): KeyBinding[] => {
   };
 
   // Create handlers for both lowercase and uppercase letters
-  const shortcuts: KeyBinding[] = [];
+  const shortcuts: KeyBinding[] = [
+    {
+      key: 'Mod-e',
+      run: expandText
+    },
+    {
+      key: 'Mod-s',
+      run: shortenText
+    }
+  ];
+
+  // Add existing letter shortcuts
   for (const key of 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')) {
     shortcuts.push({
       key,
