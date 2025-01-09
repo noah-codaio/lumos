@@ -1,0 +1,166 @@
+import { ViewPlugin, ViewUpdate, Decoration, DecorationSet, WidgetType, EditorView } from '@codemirror/view';
+import { StateEffect, StateField, Transaction } from '@codemirror/state';
+import { completionService } from '../../../services/CompletionService';
+import { syntaxTree } from '@codemirror/language';
+
+const DEBOUNCE_MS = 500;
+
+// Effects for managing completions
+export const addCompletion = StateEffect.define<{from: number, completion: string}>();
+export const clearCompletions = StateEffect.define<null>();
+
+// Create a decoration for inline completions
+const completionMark = Decoration.widget({
+  widget: new class extends WidgetType {
+    constructor(readonly text: string) { super(); }
+    toDOM() {
+      const span = document.createElement('span');
+      span.style.color = '#999';
+      span.style.opacity = '0.6';
+      span.textContent = this.text;
+      return span;
+    }
+    ignoreEvent() { return false; }
+  }(''),
+  side: 1  // Show after cursor
+});
+
+// State field for managing completion decorations
+export const completionState = StateField.define<{decorations: DecorationSet, completion: string | null}>({
+  create() {
+    return { decorations: Decoration.none, completion: null };
+  },
+  update(state, tr) {
+    let { decorations, completion } = state;
+    decorations = decorations.map(tr.changes);
+
+    for (let e of tr.effects) {
+      if (e.is(addCompletion)) {
+        const widget = Decoration.widget({
+          widget: new class extends WidgetType {
+            constructor(readonly text: string) { super(); }
+            toDOM() {
+              const span = document.createElement('span');
+              span.style.color = '#999';
+              span.style.opacity = '0.6';
+              span.textContent = e.value.completion;
+              return span;
+            }
+            ignoreEvent() { return false; }
+          }(e.value.completion),
+          side: 1  // Show after cursor
+        });
+        decorations = Decoration.set([widget.range(e.value.from)]);
+        completion = e.value.completion;
+      } else if (e.is(clearCompletions)) {
+        decorations = Decoration.none;
+        completion = null;
+      }
+    }
+    
+    // Clear completion if user types something else
+    if (tr.docChanged && !tr.annotation(Transaction.remote)) {
+      decorations = Decoration.none;
+      completion = null;
+    }
+
+    return { decorations, completion };
+  },
+  provide: f => EditorView.decorations.from(f, state => state.decorations)
+});
+
+// Plugin to handle inline completions
+export const inlineCompletionPlugin = ViewPlugin.fromClass(class {
+  completionTimeout: number | null = null;
+  lastPos: number = -1;
+
+  constructor(view: EditorView) {}
+
+  update(update: ViewUpdate) {
+    // Clear timeout if we have one
+    if (this.completionTimeout) {
+      window.clearTimeout(this.completionTimeout);
+      this.completionTimeout = null;
+    }
+
+    // Clear completions if cursor moves without document changes (clicks, arrow keys, etc)
+    if (update.selectionSet && !update.docChanged) {
+      setTimeout(() => {
+        update.view.dispatch({
+          effects: clearCompletions.of(null)
+        });
+      }, 0);
+      return;
+    }
+
+    // Don't proceed if no changes or selection changes
+    if (!update.docChanged && !update.selectionSet) {
+      return;
+    }
+
+    const pos = update.state.selection.main.head;
+    // Don't trigger completion if cursor hasn't moved
+    if (pos === this.lastPos) return;
+    this.lastPos = pos;
+
+    // Set new timeout for completion
+    this.completionTimeout = window.setTimeout(async () => {
+      // Recheck selection state before completing
+      const currentState = update.view.state;
+      if (!currentState.selection.main.empty) return;
+
+      const line = currentState.doc.lineAt(pos);
+      const text = line.text.slice(0, pos - line.from);
+
+      // Don't complete if text is too short
+      if (text.trim().length < 3) return;
+
+      // Don't complete if cursor is not at the end of the line
+      if (pos - line.from !== line.text.length) return;
+
+      // Don't complete if we're in a header line
+      const tree = syntaxTree(currentState);
+      let isHeader = false;
+      tree.iterate({
+        from: line.from,
+        to: line.to,
+        enter: (node) => {
+          if (node.type.name.startsWith('Header')) {
+            isHeader = true;
+            return false;
+          }
+        }
+      });
+      if (isHeader) return;
+
+      try {
+        // Get surrounding context (up to 25 lines before and after)
+        const startLine = Math.max(1, line.number - 25);
+        const endLine = Math.min(currentState.doc.lines, line.number + 25);
+        const contextLines: string[] = [];
+        
+        for (let i = startLine; i <= endLine; i++) {
+          if (i === line.number) continue; // Skip current line
+          const contextLine = currentState.doc.line(i);
+          contextLines.push(contextLine.text);
+        }
+        
+        const documentContext = contextLines.join('\n');
+        const completion = await completionService.getInlineCompletion(text, documentContext);
+        
+        // Final selection check before dispatching
+        if (completion && !update.view.state.selection.main.empty) return;
+        if (completion) {
+          update.view.dispatch({
+            effects: addCompletion.of({ 
+              from: pos,
+              completion 
+            })
+          });
+        }
+      } catch (error) {
+        console.error('Error getting inline completion:', error);
+      }
+    }, DEBOUNCE_MS);
+  }
+}); 
