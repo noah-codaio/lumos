@@ -1,16 +1,17 @@
 # Lumos - AI-Powered Text Editor
 
-A modern, AI-powered text editor built with React and CodeMirror that provides intelligent text completions and rewrites.
+A modern, AI-powered text editor built with React and CodeMirror that provides intelligent text completions, suggestions, and rewrites.
 
 ## Features
 
 - **Inline Completions**: Get real-time suggestions as you type
-- **Smart Rewrites**: Select text to get three different versions:
-  - Concise (press 'c'): A shorter, more direct version
-  - Elaborate (press 'e'): A more detailed version
-  - Simple (press 's'): A version using simpler language
-- **Modern UI**: Clean, minimalist interface with beautiful typography
-- **Markdown Support**: Full markdown editing capabilities
+- **Smart Rewrites**: Select text and type any letter to get a custom rewrite
+  - Use uppercase letters (e.g. 'C', 'E', 'S') to apply the rewrite
+  - Use lowercase letters to preview different rewrite options
+- **Text Suggestions**: Get contextual suggestions for improving your writing
+- **Clean Writing Experience**: Markdown syntax is automatically hidden while writing
+- **Modern UI**: Clean, minimalist interface with beautiful typography and smooth interactions
+- **Markdown Support**: Full markdown editing capabilities with live preview styling
 
 ## Project Structure
 
@@ -23,26 +24,32 @@ src/
 │   │   │   └── shortcuts.ts     # Keyboard shortcut definitions
 │   │   ├── config/
 │   │   │   └── editorConfig.ts  # Editor configuration
-│   │   └── plugins/
-│   │       ├── inlineCompletion.ts  # Inline completion plugin
-│   │       └── rewriteCompletion.ts # Text rewrite plugin
-│   └── Editor.tsx               # Main editor component
+│   │   ├── plugins/
+│   │   │   ├── inlineCompletion.ts  # Inline completion plugin
+│   │   │   ├── rewriteCompletion.ts # Text rewrite plugin
+│   │   │   ├── textSuggestions.ts   # Writing suggestions plugin
+│   │   │   ├── hideMarkdown.ts      # Markdown syntax hiding
+│   │   │   └── selectionTracker.ts  # Selection state management
+│   │   └── state/
+│   │       └── customRewrite.ts      # Custom rewrite state
+│   ├── Editor.tsx               # Main editor component
+│   └── ApiKeyInput.tsx         # API key input component
 ├── services/
 │   └── CompletionService.ts     # OpenAI API integration
 ├── types/
 │   └── completion.ts            # TypeScript type definitions
 ├── styles.css                   # Global styles
-├── App.tsx                      # Root application component
-└── main.tsx                     # Application entry point
+└── App.tsx                      # Root application component
 ```
 
 ## Technical Details
 
-- Built with React and TypeScript
+- Built with React 18 and TypeScript
 - Uses CodeMirror 6 for the editor implementation
-- Integrates with OpenAI's GPT-3.5 for AI features
-- Implements efficient caching and debouncing
-- Follows modern React best practices with hooks
+- Integrates with OpenAI's GPT models for AI features
+- Implements efficient caching and debouncing for API calls
+- Features a modern component architecture with React hooks
+- Uses CSS variables for theming and consistent styling
 
 ## Setup
 
@@ -63,12 +70,12 @@ src/
 ## Usage
 
 1. Start typing to get inline completions
-2. Select text to see rewrite options
-3. Use keyboard shortcuts:
-   - Tab: Accept inline completion
-   - c: Apply concise rewrite
-   - e: Apply elaborate rewrite
-   - s: Apply simple rewrite
+2. Press Tab to accept inline completions
+3. Select text and type any letter to get custom rewrites:
+   - Type lowercase letters to preview different rewrites
+   - Type uppercase letters to apply the rewrite
+4. Look for suggestion tooltips that appear to improve your writing
+5. Enjoy distraction-free writing with hidden markdown syntax
 
 ## Contributing
 
