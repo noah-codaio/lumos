@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionResult, startCompletion } from '@codemirror/autocomplete';
+import { CompletionContext, CompletionResult } from '@codemirror/autocomplete';
 import { completionService } from '../../../services/CompletionService';
 import { customRewriteState } from '../state/customRewrite';
 
@@ -153,4 +153,4 @@ export const createRewriteCompletions = (completionTimeoutRef: { current: number
       }, DEBOUNCE_MS);
     });
   };
-}; 
+};   

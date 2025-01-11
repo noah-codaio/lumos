@@ -133,7 +133,7 @@ export const createRewriteShortcuts = (): KeyBinding[] => {
 
       const keyLower = key.toLowerCase();
       const currentBuffer = view.state.field(customRewriteState);
-      const [text, preview] = currentBuffer.split('|');
+      const [text] = currentBuffer.split('|');
 
       // For uppercase keys, check both custom and regular options
       const option = completions.find(opt => {
@@ -182,4 +182,4 @@ export const createRewriteShortcuts = (): KeyBinding[] => {
   }
 
   return shortcuts;
-}; 
+};   

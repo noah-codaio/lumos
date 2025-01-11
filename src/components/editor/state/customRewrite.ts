@@ -9,7 +9,7 @@ export const customRewriteState = StateField.define<string>({
     return '';
   },
   update(value, tr) {
-    for (let e of tr.effects) {
+    for (const e of tr.effects) {
       if (e.is(setCustomRewrite)) {
         return e.value;
       }

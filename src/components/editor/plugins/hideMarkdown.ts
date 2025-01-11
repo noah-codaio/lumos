@@ -45,9 +45,9 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
     const currentLine = view.state.doc.lineAt(view.state.selection.main.head)
     
     // Process each visible line
-    for (let { from, to } of view.visibleRanges) {
+    for (const { from, to } of view.visibleRanges) {
       // Collect all nodes first
-      const nodes: { node: any, line: any }[] = []
+      const nodes: { node: { from: number, to: number, type: { name: string } }, line: { from: number, text: string, number: number } }[] = []
       syntaxTree(view.state).iterate({
         from,
         to,
@@ -126,4 +126,4 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
   }
 }, {
   decorations: v => v.decorations
-}) 
+})      
