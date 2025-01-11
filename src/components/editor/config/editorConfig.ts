@@ -49,17 +49,7 @@ export const createEditorConfig = (
     basicSetup,
     markdown(),
     syntaxHighlighting(markdownHighlighting),
-    EditorView.updateListener.of((update) => {
-      if (update.docChanged) {
-        // Only handle actual document changes
-        try {
-          const text = update.state.doc.toString();
-          console.log('Document updated:', text.length, 'characters');
-        } catch (error) {
-          console.error('Error in view update:', error);
-        }
-      }
-    }),
+
     hideMarkdownPlugin,
     keymap.of(defaultKeymap),
     customRewriteState,
@@ -230,4 +220,4 @@ export const createEditorConfig = (
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              

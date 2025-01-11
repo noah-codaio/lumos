@@ -47,12 +47,10 @@ export const createRewriteCompletions = (completionTimeoutRef: { current: number
         const suggestions = await completionService.getRewriteSuggestions(selectedText);
         
         if (!Array.isArray(suggestions)) {
-          console.error('Expected suggestions to be an array, got:', suggestions);
           return null;
         }
 
         if (suggestions.length === 0) {
-          console.log('No suggestions returned');
           return null;
         }
         
@@ -60,7 +58,6 @@ export const createRewriteCompletions = (completionTimeoutRef: { current: number
         const rewrites = await Promise.all(
           suggestions.map(async (suggestion) => {
             if (!suggestion || typeof suggestion !== 'object') {
-              console.error('Invalid suggestion:', suggestion);
               return null;
             }
 
@@ -73,7 +70,6 @@ export const createRewriteCompletions = (completionTimeoutRef: { current: number
         
         const validRewrites = rewrites.filter(r => r !== null);
         if (validRewrites.length === 0) {
-          console.log('No valid rewrites generated');
           return null;
         }
 
@@ -92,7 +88,7 @@ export const createRewriteCompletions = (completionTimeoutRef: { current: number
         };
         lastSelection = { from: selection.from, to: selection.to };
       } catch (error) {
-        console.error('Error getting completions:', error);
+        // Silently handle error
         return null;
       }
     }
@@ -153,4 +149,4 @@ export const createRewriteCompletions = (completionTimeoutRef: { current: number
       }, DEBOUNCE_MS);
     });
   };
-};   
+};                     

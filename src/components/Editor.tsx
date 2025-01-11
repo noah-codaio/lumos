@@ -13,55 +13,26 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
-    let timeoutId: number | null = null;
 
-    const initializeEditor = () => {
-      if (!editorRef.current || !mounted) return;
+    if (!editorRef.current) return;
 
-      try {
-        console.log('Initializing editor...');
-        
-        // Clear any existing editor
-        if (viewRef.current) {
-          viewRef.current.destroy();
-          viewRef.current = undefined;
-        }
-
-        // Set initial content with proper line endings
-        const initialContent = '# Heading\n1. First list item\n2. Second list itemm\n3. Third list item';
-        console.log('Initial content:', initialContent);
-        
-        // Create editor state with initial content
-        const editorState = EditorState.create({
-          doc: initialContent,
-          extensions: createEditorConfig(editorRef)
-        });
-        
-        // Create and mount editor view
-        const editorView = new EditorView({
-          state: editorState,
-          parent: editorRef.current
-        });
-        
-        // Store view reference and force initial update
-        viewRef.current = editorView;
-        requestAnimationFrame(() => {
-          if (mounted && viewRef.current) {
-            viewRef.current.dispatch({});
-          }
-        });
-      } catch (error) {
-        console.error('Error initializing editor:', error);
-      }
-    };
-
-    initializeEditor();
+    // Create editor state
+    const editorState = EditorState.create({
+      doc: '',
+      extensions: createEditorConfig(editorRef)
+    });
+    
+    // Create and mount editor view
+    const editorView = new EditorView({
+      state: editorState,
+      parent: editorRef.current
+    });
+    
+    // Store view reference
+    viewRef.current = editorView;
 
     return () => {
       mounted = false;
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
       if (viewRef.current) {
         viewRef.current.destroy();
         viewRef.current = undefined;
@@ -72,4 +43,4 @@ const Editor: React.FC = () => {
   return <div ref={editorRef} className="editor" style={{ width: '100%' }} />;
 };
 
-export default Editor;                                                                                                                     
+export default Editor;                                                                                                                           

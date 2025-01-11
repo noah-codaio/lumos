@@ -105,27 +105,21 @@ export const suggestionState = StateField.define<DecorationSet>({
     return Decoration.none;
   },
   update(suggestions, tr) {
-    console.log('Updating suggestions state');
+
     // Map through changes first
     suggestions = suggestions.map(tr.changes);
     
     for (const effect of tr.effects) {
       if (effect.is(addSuggestions)) {
-        console.log('Processing addSuggestions effect:', effect.value);
+
         const marks = effect.value.map(suggestion => {
           try {
             // Get the line containing the suggestion
             const line = tr.state.doc.lineAt(suggestion.from);
             const lineText = line.text;
-            console.log('Processing suggestion for line:', {
-              lineText,
-              suggestion
-            });
-            
             // Find list marker if present
             const listMatch = lineText.match(/^(\s*(?:\d+\.|[-*])\s+)/);
             const listMarkerLength = listMatch ? listMatch[1].length : 0;
-            console.log('List marker info:', { listMatch, listMarkerLength });
             
             // Calculate positions relative to line start
             const relativeFrom = suggestion.from - line.from;
@@ -133,12 +127,6 @@ export const suggestionState = StateField.define<DecorationSet>({
             
             // Create decoration directly without position adjustment
             const text = tr.state.doc.sliceString(suggestion.from, suggestion.to);
-            console.log('Creating suggestion mark:', {
-              text,
-              from: suggestion.from,
-              to: suggestion.to,
-              type: suggestion.type
-            });
             
             if (text.trim().length > 0) {
               const mark = createSuggestionMark({
@@ -147,10 +135,7 @@ export const suggestionState = StateField.define<DecorationSet>({
                 to: suggestion.to
               }).range(suggestion.from, suggestion.to);
               
-              console.log('Created suggestion mark:', mark);
               return mark;
-            } else {
-              console.log('Skipping empty suggestion text');
             }
           } catch (error) {
             console.error('Error creating suggestion mark:', error);
@@ -247,48 +232,26 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
 
   constructor(readonly view: EditorView) {
     if (!view?.state?.doc) {
-      console.log('View not initialized, skipping constructor check');
       return;
     }
-
-    // Delay initial check to ensure document is properly initialized
-    setTimeout(() => {
-      try {
-        if (this.view?.state?.doc) {
-          const text = this.view.state.doc.toString();
-          if (text && text.trim().length > 0) {
-            console.log('Initializing document check...');
-            this.checkDocument();
-          } else {
-            console.log('Document empty, skipping initial check');
-          }
-        } else {
-          console.log('View not ready, skipping initial check');
-        }
-      } catch (error) {
-        console.error('Error in delayed initialization:', error);
-      }
-    }, 500); // Increased delay to ensure proper initialization
   }
 
   update(update: ViewUpdate) {
     try {
       // Ensure we have a valid view and state
       if (!update?.view?.state) {
-        console.log('Invalid view or state, skipping update');
         return;
       }
 
       // Ensure we have a valid document
       const doc = update.state.doc;
       if (!doc) {
-        console.log('Invalid document, skipping update');
         return;
       }
 
       // Only schedule checks for document changes
       if (update.docChanged) {
-        console.log('Document changed, scheduling check...');
+
         // Cancel any pending checks
         if (this.timeout) {
           window.clearTimeout(this.timeout);
@@ -311,14 +274,14 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
     try {
       // Ensure we have a valid view
       if (!this.view) {
-        console.log('View not initialized, skipping suggestions');
+
         return;
       }
 
       // Ensure we have a valid state and document
       const state = this.view.state;
       if (!state?.doc) {
-        console.log('State or document not initialized, skipping suggestions');
+
         return;
       }
 
@@ -326,25 +289,20 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
       let text: string;
       try {
         text = state.doc.toString();
-        console.log('Checking document text:', text);
       } catch (error) {
-        console.error('Error getting document text:', error);
         return;
       }
       
       // Check if there's enough content to analyze
       const lines = text.split('\n');
-      console.log('Processing lines:', lines);
       
       // Process each line for list items
-      console.log('Processing lines:', lines);
       const listItemContent = lines
         .map(line => {
           const trimmed = line.trim();
           // Match both numbered and bullet lists with more permissive spacing
           const match = trimmed.match(/^(\d+\.|\-|\*)\s*(.+)$/);
           if (match) {
-            console.log('Found list item:', match[2].trim());
             return {
               content: match[2].trim(),
               fullLine: line
@@ -354,33 +312,21 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
         })
         .filter(item => item !== null);
       
-      console.log('Extracted list content:', listItemContent);
-      
       if (listItemContent.length === 0) {
-        console.log('No valid list items found, skipping suggestions');
         return;
       }
-      
-      // Process suggestions for each list item
-      console.log('Processing suggestions for list items:', listItemContent);
-      
-      // Process if we have any list items, regardless of length
-      console.log('Found list items:', listItemContent);
 
       // Clear existing suggestions before requesting new ones
       this.view.dispatch({
         effects: clearSuggestions.of(null)
       });
 
-      console.log('Requesting suggestions from API...');
       let suggestions;
       try {
         suggestions = await completionService.getTextSuggestions(text);
-        console.log('Raw API response:', suggestions);
         
         // Validate suggestions is an array
         if (!Array.isArray(suggestions)) {
-          console.error('Invalid suggestions format - expected array:', suggestions);
           return;
         }
         
@@ -393,13 +339,8 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
             typeof suggestion.type === 'string' &&
             typeof suggestion.replacement === 'string';
           
-          if (!isValid) {
-            console.warn('Filtered invalid suggestion:', suggestion);
-          }
           return isValid;
         });
-        
-        console.log('Validated suggestions:', suggestions);
       } catch (apiError) {
         console.error('API error:', apiError);
         return;
@@ -407,12 +348,11 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
       
       // Ensure view is still valid before dispatching
       if (!this.view?.state) {
-        console.log('View no longer valid, skipping suggestion dispatch');
+
         return;
       }
 
       if (suggestions.length > 0) {
-        console.log('Dispatching suggestions:', suggestions);
         try {
           // Ensure suggestions are within document bounds
           const validSuggestions = suggestions.map(suggestion => ({
@@ -423,24 +363,18 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
 
           if (validSuggestions.length > 0) {
             // Always dispatch suggestions if they're valid
-            console.log('Dispatching valid suggestions:', validSuggestions);
             if (this.view?.state) {
               try {
                 this.view.dispatch({
                   effects: addSuggestions.of(validSuggestions)
                 });
-                console.log('Successfully dispatched suggestions');
               } catch (error) {
-                console.error('Error dispatching suggestions:', error);
+                // Silently handle error
               }
-            } else {
-              console.log('View not available for dispatching suggestions');
             }
-          } else {
-            console.log('No valid suggestions after bounds checking');
           }
         } catch (error) {
-          console.error('Error dispatching suggestions:', error);
+          // Silently handle error
         }
       }
     } catch (error) {
@@ -459,4 +393,4 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
       window.clearTimeout(this.timeout);
     }
   }
-});                                                                                                         
+});                                                                                                                  
