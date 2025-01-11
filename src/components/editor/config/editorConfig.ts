@@ -30,7 +30,7 @@ const markdownHighlighting = HighlightStyle.define([
   { tag: t.link, color: 'var(--accent)', textDecoration: 'underline' },
   { tag: t.url, color: 'var(--accent)' },
   { tag: t.quote, display: 'block', marginLeft: '1em', color: 'var(--text-light)' },
-  { tag: t.list, display: 'block', padding: '0.1em 0' }
+  { tag: t.list, display: 'list-item', padding: '0.1em 0', listStyleType: 'none' }
 ]);
 
 /**
@@ -160,8 +160,16 @@ export const createEditorConfig = (
         position: 'relative'
       },
       '.cm-line': {
-        padding: 0 // Remove the line padding
+        padding: 0, // Remove the line padding
+        position: 'relative'
+      },
+      '.cm-formatting-list-ol': {
+        display: 'none',
+        position: 'absolute',
+        width: 0,
+        height: 0,
+        overflow: 'hidden'
       }
     })
   ];
-};      
+};                                                                                                                                                                  

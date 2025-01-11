@@ -16,7 +16,7 @@ const Editor: React.FC = () => {
 
     const startState = EditorState.create({
       doc: '',
-      extensions: createEditorConfig(editorRef, completionTimeoutRef)
+      extensions: createEditorConfig(editorRef)
     });
 
     const view = new EditorView({
@@ -32,4 +32,4 @@ const Editor: React.FC = () => {
   return <div ref={editorRef} className="editor" style={{ width: '100%' }} />;
 };
 
-export default Editor; 
+export default Editor;   

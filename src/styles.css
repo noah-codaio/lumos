@@ -87,10 +87,6 @@ body {
 /* Tooltip styles */
 .cm-tooltip {
   position: absolute !important;
-  display: inline-flex;         /* Maintain inline flow */
-  white-space: nowrap;          /* Prevent forced line breaks */
-  max-width: 50vw;             /* Constrain tooltip width */
-  overflow: hidden;            /* Prevent overflow beyond max-width */
   background: var(--background);
   border: 1px solid var(--border);
   border-radius: var(--tooltip-border-radius);
@@ -194,12 +190,38 @@ body {
 
 /* Text suggestion styles */
 .cm-text-suggestion {
-  position: relative;
-  display: inline;
-  white-space: inherit !important;
-  word-break: inherit !important;
+  position: static !important;
+  display: inline !important;
+  white-space: pre !important;
+  word-break: normal !important;
   line-height: inherit !important;
+  pointer-events: auto !important;
+  vertical-align: baseline !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  z-index: 1 !important;
+  float: none !important;
+  clear: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Tooltip styling */
+.cm-tooltip {
+  position: absolute;
+  display: inline-flex;
+  white-space: nowrap;
   pointer-events: auto;
+  z-index: 100;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--tooltip-border-radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  max-width: 50vw;
+  overflow: hidden;
 }
 
 .cm-text-suggestion-spelling {
@@ -309,20 +331,77 @@ body {
 }
 
 /* List styles */
+.cm-line[data-list-style] {
+  position: relative !important;
+  display: block !important;
+  white-space: pre !important;
+  padding-left: 2em !important;
+  counter-reset: list-counter !important;
+}
+
+.cm-line[data-list-style]::before {
+  position: absolute !important;
+  left: 0.5em !important;
+  content: attr(data-list-number) !important;
+}
+
+/* Hide all list markers */
+.cm-line[data-list-marker-hidden] .cm-formatting-list,
+.cm-line[data-list-marker-hidden] .cm-formatting-list-ol,
+.cm-line[data-list-marker-hidden] .cm-formatting-list-ul,
+.cm-line[data-list-marker-hidden] .cm-list {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  user-select: none !important;
+}
+
+/* Ensure list content stays inline */
+.cm-line[data-list-style] > *:not([class*="cm-formatting-list"]) {
+  display: inline !important;
+  white-space: pre !important;
+  vertical-align: baseline !important;
+}
+
 .cm-line[data-list-style="bullet"] {
   padding-left: 1.5em !important;
-  position: relative;
 }
 
 .cm-line[data-list-style="bullet"]::before {
-  content: "•";
-  position: absolute;
-  left: 0.5em;
-  color: var(--text);
+  content: "•" !important;
+  position: absolute !important;
+  left: 0.5em !important;
+  color: var(--text) !important;
 }
 
-.cm-line[data-list-style="number"] {
-  padding-left: 2em !important;
+.cm-line[data-list-style="number"]::before {
+  content: attr(data-list-number) ". " !important;
+  position: absolute !important;
+  left: 0 !important;
+  display: inline-block !important;
+  width: 2em !important;
+  text-align: right !important;
+  white-space: pre !important;
+}
+
+/* Hide list markers when data-list-marker-hidden is present */
+[data-list-marker-hidden="true"] .cm-formatting-list-ol,
+[data-list-marker-hidden="true"] .cm-formatting-list-ul,
+[data-list-marker-hidden="true"] .cm-formatting-list,
+[data-list-marker-hidden="true"] .cm-list {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  user-select: none !important;
 }
 
 /* Nested list indentation */
@@ -390,4 +469,4 @@ body {
 
 .api-key-container button:hover {
   opacity: 0.9;
-}    
+}                                                                                                                   

@@ -1,5 +1,5 @@
 import { ViewPlugin, ViewUpdate, Decoration, DecorationSet, EditorView, WidgetType, Tooltip, showTooltip } from '@codemirror/view';
-import { StateField, StateEffect } from '@codemirror/state';
+import { StateField, StateEffect, Range } from '@codemirror/state';
 import { TextSuggestion } from '../../../types/completion';
 import { completionService } from '../../../services/CompletionService';
 
@@ -71,8 +71,16 @@ function createSuggestionMark(suggestion: TextSuggestion) {
   return Decoration.mark({
     class: `cm-text-suggestion cm-text-suggestion-${suggestion.type}`,
     attributes: {
-      'data-suggestion': JSON.stringify(suggestion)
-    }
+      'data-suggestion': suggestion.replacement,
+      'data-type': suggestion.type,
+      'data-description': suggestion.description || '',
+      'data-inline': 'true',
+      'data-no-break': 'true'
+    },
+    inclusive: true,
+    inclusiveStart: true,
+    inclusiveEnd: true,
+    preserveWhitespace: true
   });
 }
 
@@ -88,11 +96,27 @@ export const suggestionState = StateField.define<DecorationSet>({
     for (const effect of tr.effects) {
       if (effect.is(addSuggestions)) {
         const marks = effect.value.map(suggestion => {
-          // Ensure positions are within document bounds
-          const from = Math.min(suggestion.from, tr.state.doc.length)
-          const to = Math.min(suggestion.to, tr.state.doc.length)
-          return createSuggestionMark(suggestion).range(from, to)
-        }).filter(mark => mark.from < mark.to); // Only add valid ranges
+          // Ensure positions are within document bounds and handle list items
+          const line = tr.state.doc.lineAt(suggestion.from);
+          const lineText = line.text;
+          const listMatch = lineText.match(/^(\s*(?:\d+\.|[-*])\s+)/);
+          
+          // Calculate the actual text start position after any list marker
+          const lineStartPos = line.from;
+          const textStartPos = listMatch 
+            ? lineStartPos + listMatch[1].length 
+            : suggestion.from;
+          
+          // Only apply suggestion to the actual text content, not the list marker
+          const from = Math.max(textStartPos, suggestion.from);
+          const to = Math.min(suggestion.to, tr.state.doc.length);
+          
+          // Create decoration only if we have a valid range
+          if (from < to) {
+            return createSuggestionMark(suggestion).range(from, to);
+          }
+          return null;
+        }).filter((mark): mark is Range<Decoration> => mark !== null); // Type guard to handle nulls
         suggestions = Decoration.set(marks, true);
       } else if (effect.is(clearSuggestions)) {
         suggestions = Decoration.none;
@@ -204,4 +228,4 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
       window.clearTimeout(this.timeout);
     }
   }
-});   
+});                                       
