@@ -87,12 +87,15 @@ body {
 /* Tooltip styles */
 .cm-tooltip {
   position: absolute !important;
+  display: inline-flex;         /* Maintain inline flow */
+  white-space: nowrap;          /* Prevent forced line breaks */
+  max-width: 50vw;             /* Constrain tooltip width */
+  overflow: hidden;            /* Prevent overflow beyond max-width */
   background: var(--background);
   border: 1px solid var(--border);
   border-radius: var(--tooltip-border-radius);
   box-shadow: 0 4px 12px var(--shadow);
   z-index: 1000;
-  width: 100%;
 }
 
 .cm-tooltip.cm-tooltip-autocomplete {
@@ -387,4 +390,4 @@ body {
 
 .api-key-container button:hover {
   opacity: 0.9;
-} 
+}    
