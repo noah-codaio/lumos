@@ -1,5 +1,5 @@
 import { ViewPlugin, ViewUpdate, Decoration, DecorationSet, EditorView, WidgetType, Tooltip, showTooltip } from '@codemirror/view';
-import { StateField, StateEffect, EditorState } from '@codemirror/state';
+import { StateField, StateEffect } from '@codemirror/state';
 import { TextSuggestion } from '../../../types/completion';
 import { completionService } from '../../../services/CompletionService';
 
@@ -98,7 +98,7 @@ export const suggestionState = StateField.define<DecorationSet>({
         suggestions = Decoration.none;
       } else if (effect.is(acceptSuggestion) || effect.is(dismissSuggestion)) {
         const suggestionToRemove = effect.value;
-        const newMarks: any[] = [];
+        const newMarks: { from: number, to: number, value: Decoration }[] = [];
         suggestions.between(0, tr.state.doc.length, (from, to, value) => {
           const suggestion = JSON.parse(value.spec.attributes?.['data-suggestion'] || '{}');
           if (suggestion.from !== suggestionToRemove.from || suggestion.to !== suggestionToRemove.to) {
@@ -204,4 +204,4 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
       window.clearTimeout(this.timeout);
     }
   }
-}); 
+});   

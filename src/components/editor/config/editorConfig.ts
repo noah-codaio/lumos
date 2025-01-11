@@ -1,5 +1,5 @@
-import { EditorState, Extension } from '@codemirror/state';
-import { EditorView, keymap, tooltips, Rect } from '@codemirror/view';
+import { Extension } from '@codemirror/state';
+import { EditorView, keymap, tooltips } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 import { defaultKeymap } from '@codemirror/commands';
 import { autocompletion, startCompletion } from '@codemirror/autocomplete';
@@ -40,8 +40,7 @@ const markdownHighlighting = HighlightStyle.define([
  * @returns Editor configuration extensions
  */
 export const createEditorConfig = (
-  editorRef: React.MutableRefObject<HTMLDivElement | null>,
-  completionTimeoutRef: React.MutableRefObject<number | null>
+  editorRef: React.MutableRefObject<HTMLDivElement | null>
 ): Extension[] => {
   // Create a separate timeout ref for rewrite completions
   const rewriteTimeoutRef = { current: null as number | null };
@@ -103,7 +102,7 @@ export const createEditorConfig = (
       tooltipClass: () => "cm-tooltip-autocomplete",
       optionClass: () => "",
       addToOptions: [],
-      positionInfo: (view: EditorView, list: Rect, option: Rect, info: Rect, space: Rect) => {
+      positionInfo: (view: EditorView) => {
         const editorRect = view.dom.getBoundingClientRect();
         const selectionRanges = Array.from(view.contentDOM.querySelectorAll('.cm-selectionBackground'));
 
@@ -165,4 +164,4 @@ export const createEditorConfig = (
       }
     })
   ];
-}; 
+};      

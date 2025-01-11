@@ -1,4 +1,4 @@
-import { ViewPlugin, ViewUpdate, EditorView } from '@codemirror/view';
+import { ViewPlugin, ViewUpdate } from '@codemirror/view';
 import { setCustomRewrite } from '../state/customRewrite';
 
 export const selectionTrackerPlugin = ViewPlugin.fromClass(class {
@@ -28,4 +28,4 @@ export const selectionTrackerPlugin = ViewPlugin.fromClass(class {
       this.lastSelection = { from: selection.from, to: selection.to };
     }
   }
-}); 
+});   

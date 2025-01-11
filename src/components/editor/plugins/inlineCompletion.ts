@@ -10,20 +10,7 @@ export const addCompletion = StateEffect.define<{from: number, completion: strin
 export const clearCompletions = StateEffect.define<null>();
 
 // Create a decoration for inline completions
-const completionMark = Decoration.widget({
-  widget: new class extends WidgetType {
-    constructor(readonly text: string) { super(); }
-    toDOM() {
-      const span = document.createElement('span');
-      span.style.color = '#999';
-      span.style.opacity = '0.6';
-      span.textContent = this.text;
-      return span;
-    }
-    ignoreEvent() { return false; }
-  }(''),
-  side: 1  // Show after cursor
-});
+// Removed unused completion mark widget
 
 // State field for managing completion decorations
 export const completionState = StateField.define<{decorations: DecorationSet, completion: string | null}>({
@@ -31,7 +18,8 @@ export const completionState = StateField.define<{decorations: DecorationSet, co
     return { decorations: Decoration.none, completion: null };
   },
   update(state, tr) {
-    let { decorations, completion } = state;
+    let { decorations } = state;
+    const { completion } = state;
 
     // Clear completion if user types something else
     if (tr.docChanged && !tr.annotation(Transaction.remote)) {
@@ -42,7 +30,7 @@ export const completionState = StateField.define<{decorations: DecorationSet, co
     decorations = decorations.map(tr.changes);
 
     // Handle effects
-    for (let e of tr.effects) {
+    for (const e of tr.effects) {
       if (e.is(addCompletion)) {
         const widget = Decoration.widget({
           widget: new class extends WidgetType {
@@ -177,4 +165,4 @@ export const inlineCompletionPlugin = ViewPlugin.fromClass(class {
       window.clearTimeout(this.timeoutHandle);
     }
   }
-}); 
+});         
