@@ -156,68 +156,7 @@ export const createEditorConfig = (
     EditorView.theme({
       '.cm-editor': {
         position: 'relative'
-      },
-      '.cm-content': {
-        position: 'relative'
-      },
-      '.cm-line': {
-        padding: '0.2em 0',
-        position: 'relative',
-        display: 'block',
-        minHeight: '1.2em',
-        color: 'var(--text)',
-        whiteSpace: 'pre !important',
-        wordBreak: 'keep-all !important',
-        wordWrap: 'normal !important',
-        lineHeight: '1.5em !important'
-      },
-      '.cm-list-content': {
-        display: 'inline-block !important',
-        whiteSpace: 'pre !important',
-        wordBreak: 'keep-all !important',
-        wordWrap: 'normal !important',
-        verticalAlign: 'top !important'
-      },
-      '.cm-text-suggestion': {
-        display: 'inline !important',
-        whiteSpace: 'pre !important',
-        position: 'relative !important',
-        visibility: 'visible !important',
-        wordBreak: 'keep-all !important',
-        wordWrap: 'normal !important',
-        zIndex: '3 !important',
-        backgroundColor: 'rgba(255, 255, 0, 0.2)',
-        textDecoration: 'underline wavy red',
-        cursor: 'pointer'
-      },
-      '.cm-text-suggestion::after': {
-        content: 'attr(data-suggestion)',
-        position: 'absolute',
-        bottom: '100%',
-        left: '0',
-        backgroundColor: 'white',
-        padding: '4px 8px',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        zIndex: '4',
-        whiteSpace: 'nowrap',
-        display: 'none'
-      },
-      '.cm-text-suggestion:hover::after': {
-        display: 'block'
-      },
-      '.cm-suggestion-tooltip': {
-        backgroundColor: 'white',
-        border: '1px solid #ccc',
-        padding: '8px',
-        borderRadius: '4px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        zIndex: '100',
-        display: 'inline-block',
-        whiteSpace: 'nowrap',
-        maxWidth: '300px'
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  

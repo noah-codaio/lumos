@@ -74,28 +74,9 @@ function createSuggestionMark(suggestion: TextSuggestion) {
     attributes: {
       'data-suggestion': suggestion.replacement,
       'data-type': suggestion.type,
-      'data-description': suggestion.description || '',
-      'data-inline': 'true',
-      'data-no-break': 'true',
-      'style': `
-        display: inline-block !important;
-        white-space: pre !important;
-        position: static !important;
-        visibility: visible !important;
-        word-break: keep-all !important;
-        overflow: visible !important;
-        z-index: 2 !important;
-        vertical-align: top !important;
-        width: auto !important;
-        min-width: min-content !important;
-        max-width: none !important;
-        line-height: inherit !important;
-      `
+      'data-description': suggestion.description || ''
     },
-    inclusive: true,
-    inclusiveStart: true,
-    inclusiveEnd: true,
-    preserveWhitespace: true
+    inclusive: true
   });
 }
 
@@ -393,4 +374,4 @@ export const textSuggestionPlugin = ViewPlugin.fromClass(class {
       window.clearTimeout(this.timeout);
     }
   }
-});                                                                                                                  
+});                                                                                                                     

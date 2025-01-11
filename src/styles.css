@@ -70,111 +70,66 @@ body {
 }
 
 .cm-line {
+  display: block !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  width: auto !important;
+  position: relative !important;
   padding: 0.2em 0 !important;
-  color: var(--text) !important;
-  background: transparent !important;
-  width: auto !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  visibility: visible !important;
-  display: block !important;
-  position: relative !important;
-  line-height: 1.5 !important;
-  min-height: 1.2em !important;
-  opacity: 1 !important;
-  z-index: 1 !important;
-  overflow: visible !important;
-  text-align: left !important;
-  text-indent: 0 !important;
-  pointer-events: auto !important;
-}
-
-.cm-line[data-list-visible="true"] {
-  display: block !important;
-  white-space: pre !important;
-  position: relative !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 1 !important;
-  overflow: visible !important;
-  min-height: 1.2em !important;
-  line-height: 1.5 !important;
-  padding-left: 2em !important;
-}
-
-.cm-list-content {
-  display: inline !important;
-  visibility: visible !important;
-  white-space: pre !important;
-  position: static !important;
-  z-index: 2 !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  word-break: keep-all !important;
-  overflow: visible !important;
-  width: auto !important;
-  height: auto !important;
-  text-wrap: nowrap !important;
-  margin-left: 0.5em !important;
-  color: var(--text) !important;
-  background: none !important;
-  padding: 0 !important;
-  border: none !important;
-  outline: none !important;
-  text-decoration: none !important;
 }
 
 .cm-text-suggestion {
   display: inline !important;
-  visibility: visible !important;
   white-space: pre !important;
-  position: static !important;
-  z-index: 3 !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
   word-break: keep-all !important;
-  overflow: visible !important;
-  width: auto !important;
-  height: auto !important;
-  text-wrap: nowrap !important;
+  position: static !important;
   border-bottom: 2px dotted var(--accent) !important;
-  vertical-align: baseline !important;
-  float: none !important;
-  clear: none !important;
-  transform: none !important;
-  flex: none !important;
-  box-sizing: content-box !important;
 }
 
-.cm-line[data-list-content="true"] {
-  display: flex !important;
-  align-items: baseline !important;
+.cm-markdown-hidden {
+  display: none !important;
 }
 
-/* Ensure basic content visibility */
+/* Core editor styles */
+.cm-editor {
+  position: relative !important;
+}
+
 .cm-content {
   white-space: pre !important;
-  word-break: normal !important;
-  width: 100% !important;
-  visibility: visible !important;
-  color: var(--text) !important;
-  opacity: 1 !important;
 }
 
-/* Force content visibility */
-.cm-line > span {
+.cm-line {
+  position: relative !important;
+  white-space: pre !important;
+  display: block !important;
+  padding: 0 !important;
+  min-height: 1.5em !important;
+}
+
+/* Text suggestion styles */
+.cm-text-suggestion {
   display: inline !important;
-  visibility: visible !important;
   white-space: pre !important;
-  opacity: 1 !important;
-  color: var(--text) !important;
+  border-bottom: 2px dotted var(--accent) !important;
 }
 
-.cm-content {
-  white-space: pre-wrap !important;
-  word-break: normal !important;
-  width: 100% !important;
-  visibility: visible !important;
+/* List styles */
+.cm-line[data-list-style] {
+  padding-left: 2.5em !important;
+}
+
+/* Hide original list markers */
+.cm-formatting-list,
+.cm-formatting-list-ul,
+.cm-formatting-list-ol {
+  display: none !important;
+}
+
+/* Hide duplicate content */
+.cm-line[data-list-style] img,
+.cm-line[data-list-style] span[contenteditable="false"] {
+  display: none !important;
 }
 
 /* Tooltip styles */
@@ -439,33 +394,12 @@ body {
 /* List and Editor Core Styles */
 .cm-editor {
   position: relative !important;
-  visibility: visible !important;
-  display: block !important;
 }
 
 .cm-content {
-  white-space: pre-wrap !important;
+  white-space: pre !important;
   word-break: normal !important;
   width: 100% !important;
-  visibility: visible !important;
-  display: block !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.cm-line {
-  position: relative !important;
-  display: block !important;
-  white-space: pre !important;
-  padding: 0.2em 0 !important;
-  min-height: 1.2em !important;
-  width: 100% !important;
-  line-height: 1.5 !important;
-  color: var(--text) !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 1 !important;
-  overflow: visible !important;
 }
 
 /* Text Content Styles */
@@ -506,33 +440,10 @@ body {
 }
 
 /* List Content and Markers */
-.cm-line[data-list-style] > *,
 .cm-list-content {
   display: inline !important;
   white-space: pre !important;
-  vertical-align: baseline !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: static !important;
-  pointer-events: auto !important;
-  color: var(--text) !important;
-  min-width: 1px !important;
-  height: auto !important;
-  float: none !important;
-  clear: none !important;
-  transform: none !important;
   word-break: keep-all !important;
-  overflow: visible !important;
-  z-index: 1 !important;
-  width: auto !important;
-  text-wrap: nowrap !important;
-  text-decoration: none !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  text-align: left !important;
-  text-indent: 0 !important;
-  text-transform: none !important;
-  letter-spacing: normal !important;
 }
 
 .cm-line[data-list-style]::before {
@@ -693,4 +604,4 @@ body {
 
 .api-key-container button:hover {
   opacity: 0.9;
-}                                                                                                                                                                                                                                                                      
+}                                                                                                                                                                                                                                                                                                                               
