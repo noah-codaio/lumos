@@ -69,64 +69,36 @@ body {
   display: none !important;
 }
 
-/* Core editor styles */
-.cm-editor {
-  position: relative !important;
-}
-
-.cm-content {
-  white-space: pre !important;
-}
-
+/* Core styles for list rendering */
 .cm-line {
-  position: relative !important;
-  white-space: pre !important;
   display: block !important;
-  padding: 0 !important;
-  min-height: 1.5em !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  width: auto !important;
 }
 
-/* Text suggestion styles */
 .cm-text-suggestion {
   display: inline !important;
   white-space: pre !important;
   word-break: keep-all !important;
+  position: relative !important;
   border-bottom: 2px dotted var(--accent) !important;
 }
 
-/* List styles */
 .cm-line[data-list-style] {
   padding-left: 2.5em !important;
 }
 
-/* Hide markdown syntax and duplicates */
+/* Hide markdown syntax */
 .cm-markdown-hidden,
-.cm-formatting-list,
-.cm-formatting-list-ul,
-.cm-formatting-list-ol,
-.cm-line[data-list-style] img,
-.cm-line[data-list-style] span[contenteditable="false"] {
+.cm-formatting-list {
   display: none !important;
 }
 
-/* Tooltip styles */
+/* Tooltip positioning */
 .cm-tooltip {
   position: absolute !important;
-  background: var(--background);
-  border: 1px solid var(--border);
-  border-radius: var(--tooltip-border-radius);
-  box-shadow: 0 4px 12px var(--shadow);
   z-index: 1000;
-}
-
-.cm-tooltip.cm-tooltip-autocomplete {
-  margin-top: var(--tooltip-margin) !important;
-  left: 0 !important;
-  animation: fadeIn 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  height: auto !important;
-  position: relative;
 }
 
 .cm-tooltip.cm-tooltip-autocomplete::before {
@@ -213,77 +185,17 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Text suggestion styles */
-.cm-text-suggestion {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  line-height: inherit !important;
-  pointer-events: auto !important;
-  position: static !important;
-  z-index: 2 !important;
-  min-width: 1px !important;
-  overflow: visible !important;
-  vertical-align: baseline !important;
-  width: auto !important;
-  text-wrap: nowrap !important;
-  border-bottom: 2px dotted var(--accent) !important;
-  background: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  height: auto !important;
-  float: none !important;
-  clear: none !important;
-  transform: none !important;
-  opacity: 1 !important;
-  flex: none !important;
-  box-sizing: content-box !important;
-  text-decoration: none !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  text-align: left !important;
-  text-indent: 0 !important;
-  text-transform: none !important;
-  letter-spacing: normal !important;
-}
-
-/* Tooltip styling */
-.cm-tooltip {
-  position: absolute !important;
-  display: inline-flex !important;
-  white-space: nowrap !important;
-  pointer-events: auto !important;
-  z-index: 100 !important;
-  background: var(--background) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--tooltip-border-radius) !important;
-  box-shadow: 0 4px 12px var(--shadow) !important;
-  max-width: 50vw !important;
-  overflow: hidden !important;
-}
-
+/* Text suggestion type styles */
 .cm-text-suggestion-spelling {
-  border-bottom: 2px dotted #e74c3c !important;
-  text-decoration: none;
-  padding-bottom: 1px;
-  background: transparent;
-  z-index: 1;
+  border-bottom: 2px dotted var(--accent-red) !important;
 }
 
 .cm-text-suggestion-grammar {
-  border-bottom: 2px dotted #f39c12 !important;
-  text-decoration: none;
-  padding-bottom: 1px;
-  background: transparent;
-  z-index: 1;
+  border-bottom: 2px dotted var(--accent-yellow) !important;
 }
 
 .cm-text-suggestion-style {
-  border-bottom: 2px dotted #3498db !important;
-  text-decoration: none;
-  padding-bottom: 1px;
-  background: transparent;
-  z-index: 1;
+  border-bottom: 2px dotted var(--accent-blue) !important;
 }
 
 .cm-suggestion-tooltip {
@@ -368,104 +280,7 @@ body {
   font-weight: bold !important;
 }
 
-/* List and Editor Core Styles */
-.cm-editor {
-  position: relative !important;
-}
-
-.cm-content {
-  white-space: pre !important;
-  word-break: normal !important;
-  width: 100% !important;
-}
-
-/* Text Content Styles */
-.cm-text,
-.cm-text-content {
-  display: inline !important;
-  white-space: pre !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: static !important;
-  pointer-events: auto !important;
-  color: var(--text) !important;
-}
-
-/* List Specific Styles */
-.cm-line[data-list-style] {
-  padding-left: 2em !important;
-  display: block !important;
-  min-height: 1.5em !important;
-  position: relative !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 1 !important;
-  overflow: visible !important;
-  white-space: pre !important;
-  line-height: 1.5 !important;
-}
-
-/* Hidden Markdown Syntax */
-.cm-markdown-hidden {
-  display: none !important;
-  visibility: hidden !important;
-  width: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-  position: absolute !important;
-  pointer-events: none !important;
-}
-
-/* List Content and Markers */
-.cm-list-content {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-}
-
-.cm-line[data-list-style]::before {
-  position: absolute !important;
-  left: 0.5em !important;
-  content: attr(data-list-number) !important;
-  flex-shrink: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Hide List Markers */
-.cm-formatting-list,
-.cm-formatting-list-ol,
-.cm-formatting-list-ul {
-  display: none !important;
-  visibility: hidden !important;
-  width: 0 !important;
-  height: 0 !important;
-  position: absolute !important;
-  pointer-events: none !important;
-  opacity: 0 !important;
-  user-select: none !important;
-}
-
-/* List Content Visibility */
-.cm-list,
-.cm-list-content,
-.cm-line[data-list-style] > span {
-  display: inline !important;
-  visibility: visible !important;
-  white-space: pre !important;
-  width: auto !important;
-  height: auto !important;
-  position: static !important;
-  pointer-events: auto !important;
-  opacity: 1 !important;
-  user-select: text !important;
-  color: var(--text) !important;
-  z-index: 1 !important;
-  word-break: keep-all !important;
-  overflow: visible !important;
-  vertical-align: baseline !important;
-  text-wrap: nowrap !important;
-}
-
+/* List styles */
 .cm-line[data-list-style="bullet"] {
   padding-left: 1.5em !important;
 }
@@ -481,104 +296,11 @@ body {
   content: attr(data-list-number) ". " !important;
   position: absolute !important;
   left: 0 !important;
-  display: inline-block !important;
   width: 2em !important;
   text-align: right !important;
-  white-space: pre !important;
-}
-
-/* Hide only list markers */
-.cm-formatting-list-ol,
-.cm-formatting-list-ul,
-.cm-formatting-list {
-  opacity: 0 !important;
-  position: absolute !important;
-  pointer-events: none !important;
-  user-select: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Ensure list content is always visible */
-.cm-list,
-[data-list-visible] .cm-list,
-[data-list-content] .cm-list {
-  display: inline !important;
-  visibility: visible !important;
-  white-space: pre-wrap !important;
-  width: auto !important;
-  height: auto !important;
-  position: static !important;
-  pointer-events: auto !important;
-  opacity: 1 !important;
-  user-select: text !important;
-  color: var(--text) !important;
-  z-index: 1 !important;
 }
 
 /* Nested list indentation */
 .cm-line[data-list-level="1"] { padding-left: 3em !important; }
 .cm-line[data-list-level="2"] { padding-left: 4.5em !important; }
-.cm-line[data-list-level="3"] { padding-left: 6em !important; }
-
-.cm-line[data-list-level="1"][data-list-style="bullet"]::before { left: 2em; }
-.cm-line[data-list-level="2"][data-list-style="bullet"]::before { left: 3.5em; }
-.cm-line[data-list-level="3"][data-list-style="bullet"]::before { left: 5em; }
-
-.api-key-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  text-align: center;
-  padding: 2rem;
-}
-
-.api-key-container h1 {
-  margin-bottom: 1rem;
-  color: var(--text);
-}
-
-.api-key-container p {
-  margin-bottom: 2rem;
-  color: var(--text-light);
-}
-
-.api-key-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  max-width: 400px;
-}
-
-.api-key-container input {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
-}
-
-.api-key-container input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.api-key-container button {
-  padding: 0.75rem 1.5rem;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.api-key-container button:hover {
-  opacity: 0.9;
-}                                                                                                                                                                                                                                                                                                                                  
+.cm-line[data-list-level="3"] { padding-left: 6em !important; }                                                                                                                                                                                                                                                                                                                                                 
