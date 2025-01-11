@@ -69,27 +69,6 @@ body {
   display: none !important;
 }
 
-.cm-line {
-  display: block !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  width: auto !important;
-  position: relative !important;
-  padding: 0.2em 0 !important;
-}
-
-.cm-text-suggestion {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  position: static !important;
-  border-bottom: 2px dotted var(--accent) !important;
-}
-
-.cm-markdown-hidden {
-  display: none !important;
-}
-
 /* Core editor styles */
 .cm-editor {
   position: relative !important;
@@ -111,6 +90,7 @@ body {
 .cm-text-suggestion {
   display: inline !important;
   white-space: pre !important;
+  word-break: keep-all !important;
   border-bottom: 2px dotted var(--accent) !important;
 }
 
@@ -119,14 +99,11 @@ body {
   padding-left: 2.5em !important;
 }
 
-/* Hide original list markers */
+/* Hide markdown syntax and duplicates */
+.cm-markdown-hidden,
 .cm-formatting-list,
 .cm-formatting-list-ul,
-.cm-formatting-list-ol {
-  display: none !important;
-}
-
-/* Hide duplicate content */
+.cm-formatting-list-ol,
 .cm-line[data-list-style] img,
 .cm-line[data-list-style] span[contenteditable="false"] {
   display: none !important;
@@ -604,4 +581,4 @@ body {
 
 .api-key-container button:hover {
   opacity: 0.9;
-}                                                                                                                                                                                                                                                                                                                               
+}                                                                                                                                                                                                                                                                                                                                  
