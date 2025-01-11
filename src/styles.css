@@ -70,18 +70,111 @@ body {
 }
 
 .cm-line {
-  padding: 0 !important;
+  padding: 0.2em 0 !important;
   color: var(--text) !important;
   background: transparent !important;
+  width: auto !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  visibility: visible !important;
+  display: block !important;
+  position: relative !important;
+  line-height: 1.5 !important;
+  min-height: 1.2em !important;
+  opacity: 1 !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  pointer-events: auto !important;
+}
+
+.cm-line[data-list-visible="true"] {
+  display: block !important;
+  white-space: pre !important;
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+  min-height: 1.2em !important;
+  line-height: 1.5 !important;
+  padding-left: 2em !important;
+}
+
+.cm-list-content {
+  display: inline !important;
+  visibility: visible !important;
+  white-space: pre !important;
+  position: static !important;
+  z-index: 2 !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  word-break: keep-all !important;
+  overflow: visible !important;
+  width: auto !important;
+  height: auto !important;
+  text-wrap: nowrap !important;
+  margin-left: 0.5em !important;
+  color: var(--text) !important;
+  background: none !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  text-decoration: none !important;
+}
+
+.cm-text-suggestion {
+  display: inline !important;
+  visibility: visible !important;
+  white-space: pre !important;
+  position: static !important;
+  z-index: 3 !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  word-break: keep-all !important;
+  overflow: visible !important;
+  width: auto !important;
+  height: auto !important;
+  text-wrap: nowrap !important;
+  border-bottom: 2px dotted var(--accent) !important;
+  vertical-align: baseline !important;
+  float: none !important;
+  clear: none !important;
+  transform: none !important;
+  flex: none !important;
+  box-sizing: content-box !important;
+}
+
+.cm-line[data-list-content="true"] {
+  display: flex !important;
+  align-items: baseline !important;
+}
+
+/* Ensure basic content visibility */
+.cm-content {
+  white-space: pre !important;
+  word-break: normal !important;
   width: 100% !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
+  visibility: visible !important;
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+/* Force content visibility */
+.cm-line > span {
+  display: inline !important;
+  visibility: visible !important;
+  white-space: pre !important;
+  opacity: 1 !important;
+  color: var(--text) !important;
 }
 
 .cm-content {
   white-space: pre-wrap !important;
-  word-break: break-word !important;
+  word-break: normal !important;
   width: 100% !important;
+  visibility: visible !important;
 }
 
 /* Tooltip styles */
@@ -190,38 +283,51 @@ body {
 
 /* Text suggestion styles */
 .cm-text-suggestion {
-  position: static !important;
   display: inline !important;
   white-space: pre !important;
-  word-break: normal !important;
+  word-break: keep-all !important;
   line-height: inherit !important;
   pointer-events: auto !important;
-  vertical-align: baseline !important;
+  position: static !important;
+  z-index: 2 !important;
+  min-width: 1px !important;
   overflow: visible !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
+  vertical-align: baseline !important;
+  width: auto !important;
+  text-wrap: nowrap !important;
+  border-bottom: 2px dotted var(--accent) !important;
   background: none !important;
-  z-index: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
   float: none !important;
   clear: none !important;
-  width: auto !important;
-  height: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  flex: none !important;
+  box-sizing: content-box !important;
+  text-decoration: none !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
 }
 
 /* Tooltip styling */
 .cm-tooltip {
-  position: absolute;
-  display: inline-flex;
-  white-space: nowrap;
-  pointer-events: auto;
-  z-index: 100;
-  background: var(--background);
-  border: 1px solid var(--border);
-  border-radius: var(--tooltip-border-radius);
-  box-shadow: 0 4px 12px var(--shadow);
-  max-width: 50vw;
-  overflow: hidden;
+  position: absolute !important;
+  display: inline-flex !important;
+  white-space: nowrap !important;
+  pointer-events: auto !important;
+  z-index: 100 !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--tooltip-border-radius) !important;
+  box-shadow: 0 4px 12px var(--shadow) !important;
+  max-width: 50vw !important;
+  overflow: hidden !important;
 }
 
 .cm-text-suggestion-spelling {
@@ -330,26 +436,117 @@ body {
   font-weight: bold !important;
 }
 
-/* List styles */
-.cm-line[data-list-style] {
+/* List and Editor Core Styles */
+.cm-editor {
+  position: relative !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.cm-content {
+  white-space: pre-wrap !important;
+  word-break: normal !important;
+  width: 100% !important;
+  visibility: visible !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.cm-line {
   position: relative !important;
   display: block !important;
   white-space: pre !important;
+  padding: 0.2em 0 !important;
+  min-height: 1.2em !important;
+  width: 100% !important;
+  line-height: 1.5 !important;
+  color: var(--text) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+}
+
+/* Text Content Styles */
+.cm-text,
+.cm-text-content {
+  display: inline !important;
+  white-space: pre !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  pointer-events: auto !important;
+  color: var(--text) !important;
+}
+
+/* List Specific Styles */
+.cm-line[data-list-style] {
   padding-left: 2em !important;
-  counter-reset: list-counter !important;
+  display: block !important;
+  min-height: 1.5em !important;
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+  white-space: pre !important;
+  line-height: 1.5 !important;
+}
+
+/* Hidden Markdown Syntax */
+.cm-markdown-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+}
+
+/* List Content and Markers */
+.cm-line[data-list-style] > *,
+.cm-list-content {
+  display: inline !important;
+  white-space: pre !important;
+  vertical-align: baseline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  pointer-events: auto !important;
+  color: var(--text) !important;
+  min-width: 1px !important;
+  height: auto !important;
+  float: none !important;
+  clear: none !important;
+  transform: none !important;
+  word-break: keep-all !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+  width: auto !important;
+  text-wrap: nowrap !important;
+  text-decoration: none !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
 }
 
 .cm-line[data-list-style]::before {
   position: absolute !important;
   left: 0.5em !important;
   content: attr(data-list-number) !important;
+  flex-shrink: 0 !important;
+  pointer-events: none !important;
 }
 
-/* Hide all list markers */
-.cm-line[data-list-marker-hidden] .cm-formatting-list,
-.cm-line[data-list-marker-hidden] .cm-formatting-list-ol,
-.cm-line[data-list-marker-hidden] .cm-formatting-list-ul,
-.cm-line[data-list-marker-hidden] .cm-list {
+/* Hide List Markers */
+.cm-formatting-list,
+.cm-formatting-list-ol,
+.cm-formatting-list-ul {
   display: none !important;
   visibility: hidden !important;
   width: 0 !important;
@@ -360,11 +557,25 @@ body {
   user-select: none !important;
 }
 
-/* Ensure list content stays inline */
-.cm-line[data-list-style] > *:not([class*="cm-formatting-list"]) {
+/* List Content Visibility */
+.cm-list,
+.cm-list-content,
+.cm-line[data-list-style] > span {
   display: inline !important;
+  visibility: visible !important;
   white-space: pre !important;
+  width: auto !important;
+  height: auto !important;
+  position: static !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  user-select: text !important;
+  color: var(--text) !important;
+  z-index: 1 !important;
+  word-break: keep-all !important;
+  overflow: visible !important;
   vertical-align: baseline !important;
+  text-wrap: nowrap !important;
 }
 
 .cm-line[data-list-style="bullet"] {
@@ -388,20 +599,33 @@ body {
   white-space: pre !important;
 }
 
-/* Hide list markers when data-list-marker-hidden is present */
-[data-list-marker-hidden="true"] .cm-formatting-list-ol,
-[data-list-marker-hidden="true"] .cm-formatting-list-ul,
-[data-list-marker-hidden="true"] .cm-formatting-list,
-[data-list-marker-hidden="true"] .cm-list {
-  display: none !important;
-  visibility: hidden !important;
-  width: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-  position: absolute !important;
+/* Hide only list markers */
+.cm-formatting-list-ol,
+.cm-formatting-list-ul,
+.cm-formatting-list {
   opacity: 0 !important;
+  position: absolute !important;
   pointer-events: none !important;
   user-select: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ensure list content is always visible */
+.cm-list,
+[data-list-visible] .cm-list,
+[data-list-content] .cm-list {
+  display: inline !important;
+  visibility: visible !important;
+  white-space: pre-wrap !important;
+  width: auto !important;
+  height: auto !important;
+  position: static !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  user-select: text !important;
+  color: var(--text) !important;
+  z-index: 1 !important;
 }
 
 /* Nested list indentation */
@@ -469,4 +693,4 @@ body {
 
 .api-key-container button:hover {
   opacity: 0.9;
-}                                                                                                                   
+}                                                                                                                                                                                                                                                                      

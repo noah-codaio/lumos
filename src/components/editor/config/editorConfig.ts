@@ -30,7 +30,7 @@ const markdownHighlighting = HighlightStyle.define([
   { tag: t.link, color: 'var(--accent)', textDecoration: 'underline' },
   { tag: t.url, color: 'var(--accent)' },
   { tag: t.quote, display: 'block', marginLeft: '1em', color: 'var(--text-light)' },
-  { tag: t.list, display: 'list-item', padding: '0.1em 0', listStyleType: 'none' }
+  { tag: t.list, display: 'block', padding: '0.1em 0' }
 ]);
 
 /**
@@ -49,6 +49,17 @@ export const createEditorConfig = (
     basicSetup,
     markdown(),
     syntaxHighlighting(markdownHighlighting),
+    EditorView.updateListener.of((update) => {
+      if (update.docChanged) {
+        // Only handle actual document changes
+        try {
+          const text = update.state.doc.toString();
+          console.log('Document updated:', text.length, 'characters');
+        } catch (error) {
+          console.error('Error in view update:', error);
+        }
+      }
+    }),
     hideMarkdownPlugin,
     keymap.of(defaultKeymap),
     customRewriteState,
@@ -160,16 +171,63 @@ export const createEditorConfig = (
         position: 'relative'
       },
       '.cm-line': {
-        padding: 0, // Remove the line padding
-        position: 'relative'
+        padding: '0.2em 0',
+        position: 'relative',
+        display: 'block',
+        minHeight: '1.2em',
+        color: 'var(--text)',
+        whiteSpace: 'pre !important',
+        wordBreak: 'keep-all !important',
+        wordWrap: 'normal !important',
+        lineHeight: '1.5em !important'
       },
-      '.cm-formatting-list-ol': {
-        display: 'none',
+      '.cm-list-content': {
+        display: 'inline-block !important',
+        whiteSpace: 'pre !important',
+        wordBreak: 'keep-all !important',
+        wordWrap: 'normal !important',
+        verticalAlign: 'top !important'
+      },
+      '.cm-text-suggestion': {
+        display: 'inline !important',
+        whiteSpace: 'pre !important',
+        position: 'relative !important',
+        visibility: 'visible !important',
+        wordBreak: 'keep-all !important',
+        wordWrap: 'normal !important',
+        zIndex: '3 !important',
+        backgroundColor: 'rgba(255, 255, 0, 0.2)',
+        textDecoration: 'underline wavy red',
+        cursor: 'pointer'
+      },
+      '.cm-text-suggestion::after': {
+        content: 'attr(data-suggestion)',
         position: 'absolute',
-        width: 0,
-        height: 0,
-        overflow: 'hidden'
+        bottom: '100%',
+        left: '0',
+        backgroundColor: 'white',
+        padding: '4px 8px',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        zIndex: '4',
+        whiteSpace: 'nowrap',
+        display: 'none'
+      },
+      '.cm-text-suggestion:hover::after': {
+        display: 'block'
+      },
+      '.cm-suggestion-tooltip': {
+        backgroundColor: 'white',
+        border: '1px solid #ccc',
+        padding: '8px',
+        borderRadius: '4px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        zIndex: '100',
+        display: 'inline-block',
+        whiteSpace: 'nowrap',
+        maxWidth: '300px'
       }
     })
   ];
-};                                                                                                                                                                  
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            

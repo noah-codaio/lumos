@@ -17,10 +17,12 @@ export class CompletionService {
   private readonly CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
   constructor(apiKey?: string) {
+    const envApiKey = typeof window !== 'undefined' ? import.meta.env.VITE_OPENAI_API_KEY : process.env.VITE_OPENAI_API_KEY;
     this.openai = new OpenAI({
-      apiKey: apiKey || '',
+      apiKey: apiKey || envApiKey || '',
       dangerouslyAllowBrowser: true
     });
+    console.log('CompletionService initialized with API key:', apiKey ? 'Custom key' : envApiKey ? 'Environment key' : 'No key');
     this.cache = new Map();
     this.inlineCache = new Map();
     this.suggestionCache = new Map();
@@ -217,13 +219,17 @@ export class CompletionService {
    * @returns Promise resolving to an array of text suggestions
    */
   async getTextSuggestions(text: string): Promise<TextSuggestion[]> {
+    console.log('Getting text suggestions for:', text);
+    
     // Check cache first
     const cached = this.suggestionCache.get(text);
     if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
+      console.log('Returning cached suggestions:', cached.suggestions);
       return cached.suggestions;
     }
 
     try {
+      console.log('Making API request for suggestions...');
       const completion = await this.openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [{
@@ -248,8 +254,10 @@ Example: {"suggestions": [
         temperature: 0.3
       });
       
+      console.log('Raw API response:', completion.choices[0]?.message?.content);
       const response = JSON.parse(completion.choices[0]?.message?.content || '{"suggestions": []}');
       const rawSuggestions = Array.isArray(response.suggestions) ? response.suggestions : [];
+      console.log('Parsed suggestions:', rawSuggestions);
       
       // Convert the suggestions to include proper position information
       const suggestions: TextSuggestion[] = [];
@@ -267,6 +275,8 @@ Example: {"suggestions": [
         }
       }
       
+      console.log('Final processed suggestions:', suggestions);
+      
       // Cache the result
       this.suggestionCache.set(text, {
         suggestions,
@@ -281,4 +291,4 @@ Example: {"suggestions": [
   }
 }
 
-export const completionService = new CompletionService(); 
+export const completionService = new CompletionService();      
