@@ -12,24 +12,35 @@ const Editor: React.FC = () => {
   const completionTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
+    let mounted = true;
+
     if (!editorRef.current) return;
 
-    const startState = EditorState.create({
+    // Create editor state
+    const editorState = EditorState.create({
       doc: '',
-      extensions: createEditorConfig(editorRef, completionTimeoutRef)
+      extensions: createEditorConfig(editorRef)
     });
-
-    const view = new EditorView({
-      state: startState,
+    
+    // Create and mount editor view
+    const editorView = new EditorView({
+      state: editorState,
       parent: editorRef.current
     });
     
-    viewRef.current = view;
+    // Store view reference
+    viewRef.current = editorView;
 
-    return () => view.destroy();
+    return () => {
+      mounted = false;
+      if (viewRef.current) {
+        viewRef.current.destroy();
+        viewRef.current = undefined;
+      }
+    };
   }, []);
 
   return <div ref={editorRef} className="editor" style={{ width: '100%' }} />;
 };
 
-export default Editor; 
+export default Editor;                                                                                                                           

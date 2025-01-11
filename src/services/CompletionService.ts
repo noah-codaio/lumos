@@ -17,10 +17,12 @@ export class CompletionService {
   private readonly CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
   constructor(apiKey?: string) {
+    const envApiKey = typeof window !== 'undefined' ? import.meta.env.VITE_OPENAI_API_KEY : process.env.VITE_OPENAI_API_KEY;
     this.openai = new OpenAI({
-      apiKey: apiKey || '',
+      apiKey: apiKey || envApiKey || '',
       dangerouslyAllowBrowser: true
     });
+
     this.cache = new Map();
     this.inlineCache = new Map();
     this.suggestionCache = new Map();
@@ -70,7 +72,7 @@ export class CompletionService {
       const response = JSON.parse(completion.choices[0]?.message?.content || '{"suggestions": []}');
       return Array.isArray(response.suggestions) ? response.suggestions : [];
     } catch (error) {
-      console.error('OpenAI API error:', error);
+      // Silently handle API errors
       return [];
     }
   }
@@ -98,7 +100,7 @@ export class CompletionService {
       
       return completion.choices[0]?.message?.content || '';
     } catch (error) {
-      console.error('OpenAI API error:', error);
+      // Silently handle API errors
       return '';
     }
   }
@@ -141,7 +143,7 @@ export class CompletionService {
 
       return result;
     } catch (error) {
-      console.error('OpenAI API error:', error);
+      // Silently handle API errors
       return {
         concise: '',
         elaborate: '',
@@ -267,6 +269,8 @@ Example: {"suggestions": [
         }
       }
       
+
+      
       // Cache the result
       this.suggestionCache.set(text, {
         suggestions,
@@ -281,4 +285,4 @@ Example: {"suggestions": [
   }
 }
 
-export const completionService = new CompletionService(); 
+export const completionService = new CompletionService();            

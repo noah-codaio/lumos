@@ -49,6 +49,7 @@ export const createEditorConfig = (
     basicSetup,
     markdown(),
     syntaxHighlighting(markdownHighlighting),
+
     hideMarkdownPlugin,
     keymap.of(defaultKeymap),
     customRewriteState,
@@ -155,13 +156,7 @@ export const createEditorConfig = (
     EditorView.theme({
       '.cm-editor': {
         position: 'relative'
-      },
-      '.cm-content': {
-        position: 'relative'
-      },
-      '.cm-line': {
-        padding: 0 // Remove the line padding
       }
     })
   ];
-};      
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
