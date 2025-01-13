@@ -63,13 +63,30 @@ export const createEditorConfig = (
     EditorView.lineWrapping,
     EditorView.updateListener.of(update => {
       if (!update?.view?.state?.doc) return;
+      
+      // Only handle document changes
       if (update.docChanged) {
-        // Schedule updates only when document changes
-        window.requestAnimationFrame(() => {
-          if (update.view) {
-            update.view.dispatch({});
+        const view = update.view;
+        const changes = update.changes;
+        
+        // Ensure we have a valid state before dispatching
+        if (view.state) {
+          try {
+            // Use Promise to ensure sequential updates
+            Promise.resolve().then(() => {
+              if (view.state) {
+                view.dispatch({
+                  changes,
+                  effects: [],
+                  annotations: []
+                });
+              }
+            });
+          } catch (error) {
+            // Silently handle any update errors
+            console.debug('Update error:', error);
           }
-        });
+        }
       }
     }),
     
@@ -178,4 +195,4 @@ export const createEditorConfig = (
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
