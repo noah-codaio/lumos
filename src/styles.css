@@ -69,14 +69,31 @@ body {
   display: none !important;
 }
 
-/* Core styles for list rendering */
+/* Core editor styles */
+.cm-editor {
+  position: relative !important;
+}
+
+.cm-content {
+  white-space: pre-wrap !important;
+}
+
+/* Line styles */
 .cm-line {
   display: block !important;
   white-space: pre !important;
   word-break: keep-all !important;
   width: auto !important;
+  position: relative !important;
 }
 
+/* List styles */
+.cm-line[data-list-style] {
+  padding-left: 2.5em !important;
+  position: relative !important;
+}
+
+/* Text suggestions */
 .cm-text-suggestion {
   display: inline !important;
   white-space: pre !important;
@@ -85,20 +102,181 @@ body {
   border-bottom: 2px dotted var(--accent) !important;
 }
 
+/* List content */
+.cm-list-content {
+  display: inline !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+}
+
+/* Tooltip styles */
+.cm-tooltip {
+  position: absolute !important;
+  z-index: 100 !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  max-width: 300px !important;
+  white-space: normal !important;
+  pointer-events: auto !important;
+}
+
+/* Tooltip styles */
+.cm-tooltip {
+  position: absolute !important;
+  z-index: 100 !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  white-space: pre-wrap !important;
+  max-width: 400px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Text suggestion styles */
+.cm-text-suggestion {
+  display: inline !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  position: relative !important;
+  border-bottom: 2px dotted var(--accent) !important;
+  z-index: 1 !important;
+}
+
+.cm-suggestion-tooltip {
+  position: absolute !important;
+  z-index: 100 !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  max-width: 300px !important;
+  white-space: normal !important;
+  pointer-events: auto !important;
+}
+
+/* Text suggestion styles */
+.cm-text-suggestion {
+  display: inline !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  position: relative !important;
+  border-bottom: 2px dotted var(--accent) !important;
+  z-index: 1 !important;
+}
+
+.cm-suggestion-tooltip {
+  position: absolute !important;
+  z-index: 100 !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  max-width: 300px !important;
+  white-space: normal !important;
+}
+
+/* Core editor styles */
+.cm-editor {
+  position: relative !important;
+}
+
+.cm-line {
+  display: block !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  width: auto !important;
+}
+
+/* List styles */
 .cm-line[data-list-style] {
   padding-left: 2.5em !important;
+  position: relative !important;
+}
+
+.cm-list-content {
+  display: inline !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  visibility: visible !important;
+}
+
+/* Text suggestion styles */
+.cm-text-suggestion {
+  display: inline !important;
+  white-space: pre !important;
+  word-break: keep-all !important;
+  position: relative !important;
+  border-bottom: 2px dotted var(--accent) !important;
+  z-index: 1 !important;
+}
+
+.cm-suggestion-tooltip {
+  position: absolute !important;
+  z-index: 100 !important;
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  max-width: 300px !important;
+  white-space: normal !important;
+}
+
+.cm-suggestion-replacement {
+  font-weight: bold !important;
+  margin-bottom: 4px !important;
+}
+
+.cm-suggestion-description {
+  font-size: 0.9em !important;
+  margin-bottom: 8px !important;
+}
+
+.cm-suggestion-actions {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.cm-suggestion-action {
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--background) !important;
+  cursor: pointer !important;
+  font-size: 0.9em !important;
+}
+
+.cm-suggestion-accept {
+  background: var(--accent) !important;
+  color: white !important;
+  border-color: var(--accent) !important;
+}
+
+/* Text suggestion styling */
+.cm-text-suggestion {
+  display: inline !important;
+  white-space: pre !important;
+  position: relative !important;
+  border-bottom: 2px dotted var(--accent) !important;
+  padding-bottom: 1px !important;
 }
 
 /* Hide markdown syntax */
-.cm-markdown-hidden,
-.cm-formatting-list {
+.cm-markdown-hidden {
   display: none !important;
 }
 
 /* Tooltip positioning */
 .cm-tooltip {
   position: absolute !important;
-  z-index: 1000;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
 }
 
 .cm-tooltip.cm-tooltip-autocomplete::before {
@@ -292,15 +470,18 @@ body {
   color: var(--text) !important;
 }
 
+.cm-line[data-list-style="number"] {
+  counter-reset: none !important;
+}
+
 .cm-line[data-list-style="number"]::before {
-  content: attr(data-list-number) ". " !important;
+  content: attr(data-list-number) "." !important;
   position: absolute !important;
-  left: 0 !important;
-  width: 2em !important;
-  text-align: right !important;
+  left: 1em !important;
+  color: var(--text) !important;
 }
 
 /* Nested list indentation */
 .cm-line[data-list-level="1"] { padding-left: 3em !important; }
 .cm-line[data-list-level="2"] { padding-left: 4.5em !important; }
-.cm-line[data-list-level="3"] { padding-left: 6em !important; }                                                                                                                                                                                                                                                                                                                                                 
+.cm-line[data-list-level="3"] { padding-left: 6em !important; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  

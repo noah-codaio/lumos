@@ -17,7 +17,11 @@ export class CompletionService {
   private readonly CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
   constructor(apiKey?: string) {
+    // Get API key from Vite environment
     const envApiKey = typeof window !== 'undefined' ? import.meta.env.VITE_OPENAI_API_KEY : process.env.VITE_OPENAI_API_KEY;
+    console.debug('CompletionService: Initializing with API key:', envApiKey ? 'present' : 'missing');
+    console.debug('CompletionService: API key length:', envApiKey?.length || 0);
+    
     this.openai = new OpenAI({
       apiKey: apiKey || envApiKey || '',
       dangerouslyAllowBrowser: true
@@ -26,6 +30,9 @@ export class CompletionService {
     this.cache = new Map();
     this.inlineCache = new Map();
     this.suggestionCache = new Map();
+    
+    // Verify OpenAI client initialization
+    console.debug('CompletionService: OpenAI client initialized:', !!this.openai);
   }
 
   updateApiKey(apiKey: string) {
@@ -251,7 +258,7 @@ Example: {"suggestions": [
       });
       
       const response = JSON.parse(completion.choices[0]?.message?.content || '{"suggestions": []}');
-      const rawSuggestions = Array.isArray(response.suggestions) ? response.suggestions : [];
+        const rawSuggestions = Array.isArray(response.suggestions) ? response.suggestions : [];
       
       // Convert the suggestions to include proper position information
       const suggestions: TextSuggestion[] = [];
@@ -269,8 +276,6 @@ Example: {"suggestions": [
         }
       }
       
-
-      
       // Cache the result
       this.suggestionCache.set(text, {
         suggestions,
@@ -285,4 +290,4 @@ Example: {"suggestions": [
   }
 }
 
-export const completionService = new CompletionService();            
+export const completionService = new CompletionService();                                    

@@ -1,4 +1,4 @@
-import { EditorView, Decoration, DecorationSet, ViewPlugin, ViewUpdate } from "@codemirror/view"
+import { EditorView, Decoration, DecorationSet, ViewPlugin, ViewUpdate, WidgetType } from "@codemirror/view"
 import { RangeSetBuilder } from "@codemirror/state"
 import { syntaxTree } from "@codemirror/language"
 
@@ -46,38 +46,61 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
     
     // Process each visible line
     for (const { from, to } of view.visibleRanges) {
-      let lineStart = view.state.doc.lineAt(from).from;
-      let currentListLevel = 0;
-      
       syntaxTree(view.state).iterate({
         from,
         to,
         enter: (node) => {
-          const line = view.state.doc.lineAt(node.from);
-          if (line.number === currentLine.number) return;
-          
-          // Reset list level when moving to a new line
-          if (line.from !== lineStart) {
-            currentListLevel = 0;
-            lineStart = line.from;
-          }
-          
           if (node.type.name === "ListItem") {
-            currentListLevel++;
-          }
-          
-          if (node.type.name === "ListMark") {
-            const listMarkText = view.state.doc.sliceString(node.from, node.to);
-            const isNumbered = /^\d+\./.test(listMarkText);
+            const line = view.state.doc.lineAt(node.from);
+            const indent = Math.floor((line.text.length - line.text.trimStart().length) / 2);
             
-            // Add list style decoration to the line
-            builder.add(line.from, line.from + 1, createListLineDecoration(
-              currentListLevel,
-              isNumbered ? 'number' : 'bullet'
-            ));
-            
-            // Hide the original list marker
-            builder.add(node.from, node.to, hideMark);
+            // Find the list marker within this list item
+            syntaxTree(view.state).iterate({
+              from: line.from,
+              to: line.to,
+              enter: (innerNode) => {
+                if (innerNode.type.name === "ListMark") {
+                  const listMarkText = view.state.doc.sliceString(innerNode.from, innerNode.to);
+                  const isNumbered = /^\d+\./.test(listMarkText);
+                  const number = isNumbered ? parseInt(listMarkText) : null;
+                  
+                  // Add list style decoration with proper attributes
+                  const lineAttrs: Record<string, string> = {
+                    'data-list-style': isNumbered ? 'number' : 'bullet',
+                    'data-list-level': indent.toString()
+                  };
+                  
+                  // For numbered lists, ensure number is properly set
+                  if (isNumbered && number !== null) {
+                    lineAttrs['data-list-number'] = number.toString();
+                  }
+                  
+                  // Add line decoration with list attributes
+                  builder.add(line.from, line.to, Decoration.line({
+                    attributes: lineAttrs
+                  }));
+                  
+                  // Hide only the list marker and its trailing space
+                  builder.add(innerNode.from, innerNode.to + 1, hideMark);
+                  
+                  // Add list content decoration
+                  const contentStart = innerNode.to + 1;
+                  const contentEnd = line.to;
+                  const content = view.state.doc.sliceString(contentStart, contentEnd);
+                  
+                  if (content.trim()) {
+                    builder.add(contentStart, contentEnd, Decoration.mark({
+                      class: "cm-list-content",
+                      attributes: {
+                        'data-content': content.trim()
+                      }
+                    }));
+                  }
+                  
+                  return false;
+                }
+              }
+            });
           } else if (
             node.type.name === "HeaderMark" || // #, ##, etc.
             node.type.name === "QuoteMark" || // >
@@ -96,4 +119,4 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
   }
 }, {
   decorations: v => v.decorations
-});                                                                                                                                                                                                                                                                                                                                                                                                                  
+});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          

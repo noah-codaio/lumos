@@ -12,30 +12,42 @@ const Editor: React.FC = () => {
   const completionTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    let mounted = true;
-
     if (!editorRef.current) return;
 
-    // Create editor state
+    // Create editor state with test content
+    const initialContent = `# Heading
+1. First list item
+2. Second list itemm
+3. Third list item
+
+The list above should show properly with suggestions.`;
+
+    // Clean up existing view
+    if (viewRef.current) {
+      viewRef.current.destroy();
+    }
+
+    // Create new editor state with proper list handling
     const editorState = EditorState.create({
-      doc: '',
-      extensions: createEditorConfig(editorRef)
+      doc: initialContent,
+      extensions: [
+        ...createEditorConfig(editorRef),
+        EditorView.lineWrapping
+      ]
     });
     
     // Create and mount editor view
-    const editorView = new EditorView({
+    const view = new EditorView({
       state: editorState,
       parent: editorRef.current
     });
     
     // Store view reference
-    viewRef.current = editorView;
+    viewRef.current = view;
 
     return () => {
-      mounted = false;
       if (viewRef.current) {
         viewRef.current.destroy();
-        viewRef.current = undefined;
       }
     };
   }, []);
@@ -43,4 +55,4 @@ const Editor: React.FC = () => {
   return <div ref={editorRef} className="editor" style={{ width: '100%' }} />;
 };
 
-export default Editor;                                                                                                                           
+export default Editor;                                                                                                                                                               

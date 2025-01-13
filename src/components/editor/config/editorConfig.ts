@@ -49,11 +49,16 @@ export const createEditorConfig = (
     basicSetup,
     markdown(),
     syntaxHighlighting(markdownHighlighting),
-
-    hideMarkdownPlugin,
     keymap.of(defaultKeymap),
+    // Initialize state fields first
     customRewriteState,
+    completionState,
+    suggestionState,
+    suggestionTooltipState,
+    // Then initialize plugins in dependency order
+    hideMarkdownPlugin,
     selectionTrackerPlugin,
+    textSuggestionPlugin,
     tooltips({
       position: 'absolute',
       parent: editorRef.current || undefined,
@@ -88,11 +93,7 @@ export const createEditorConfig = (
         };
       }
     }),
-    completionState,
-    suggestionState,
-    suggestionTooltipState,
     inlineCompletionPlugin,
-    textSuggestionPlugin,
     autocompletion({
       override: [createRewriteCompletions(rewriteTimeoutRef)],
       defaultKeymap: true,
@@ -159,4 +160,4 @@ export const createEditorConfig = (
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
