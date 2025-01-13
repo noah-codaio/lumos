@@ -91,8 +91,11 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
                   if (content.trim()) {
                     builder.add(contentStart, contentEnd, Decoration.mark({
                       class: "cm-list-content",
+                      tagName: "span",
+                      inclusive: true,
                       attributes: {
-                        'data-content': content.trim()
+                        'data-content': content.trim(),
+                        'style': 'display: inline !important; white-space: pre !important; word-break: keep-all !important;'
                       }
                     }));
                   }
@@ -119,4 +122,4 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
   }
 }, {
   decorations: v => v.decorations
-});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
