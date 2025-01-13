@@ -1,4 +1,4 @@
-import { Extension } from '@codemirror/state';
+import { Extension, EditorState } from '@codemirror/state';
 import { EditorView, keymap, tooltips } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 import { defaultKeymap } from '@codemirror/commands';
@@ -46,16 +46,34 @@ export const createEditorConfig = (
   const rewriteTimeoutRef = { current: null as number | null };
 
   return [
+    // Core setup
     basicSetup,
     markdown(),
     syntaxHighlighting(markdownHighlighting),
     keymap.of(defaultKeymap),
-    // Initialize state fields first
+    
+    // State fields (must be initialized first)
+    EditorState.allowMultipleSelections.of(true),
     customRewriteState,
     completionState,
     suggestionState,
     suggestionTooltipState,
-    // Then initialize plugins in dependency order
+    
+    // View configuration
+    EditorView.lineWrapping,
+    EditorView.updateListener.of(update => {
+      if (!update?.view?.state?.doc) return;
+      if (update.docChanged) {
+        // Schedule updates only when document changes
+        window.requestAnimationFrame(() => {
+          if (update.view) {
+            update.view.dispatch({});
+          }
+        });
+      }
+    }),
+    
+    // Plugins (initialized after state fields)
     hideMarkdownPlugin,
     selectionTrackerPlugin,
     textSuggestionPlugin,
@@ -160,4 +178,4 @@ export const createEditorConfig = (
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
