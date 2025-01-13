@@ -69,15 +69,6 @@ body {
   display: none !important;
 }
 
-/* Core editor styles */
-.cm-editor {
-  position: relative !important;
-}
-
-.cm-content {
-  white-space: pre-wrap !important;
-}
-
 /* Essential styles for list rendering and suggestions */
 .cm-line {
   display: block !important;
@@ -85,38 +76,38 @@ body {
   word-break: keep-all !important;
   width: auto !important;
   position: relative !important;
+  padding: 0 !important;
 }
 
-/* List styles */
-.cm-line[data-list-style] {
-  padding-left: 2.5em !important;
-  position: relative !important;
-}
-
-.cm-line[data-list-style="number"]::before {
-  content: attr(data-list-number) "." !important;
-  position: absolute !important;
-  left: 1em !important;
-  color: var(--text) !important;
-}
-
-/* Text suggestions */
 .cm-text-suggestion {
   display: inline !important;
   white-space: pre !important;
   word-break: keep-all !important;
   position: relative !important;
   border-bottom: 2px dotted var(--accent) !important;
-  z-index: 1 !important;
 }
 
-/* List content */
 .cm-list-content {
   display: inline !important;
   white-space: pre !important;
   word-break: keep-all !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+}
+
+/* List styles */
+.cm-line[data-list-style] {
+  padding-left: 2.5em !important;
+}
+
+.cm-line[data-list-style="bullet"]::before {
+  content: "•" !important;
+  position: absolute !important;
+  left: 1em !important;
+}
+
+.cm-line[data-list-style="number"]::before {
+  content: attr(data-list-number) "." !important;
+  position: absolute !important;
+  left: 1em !important;
 }
 
 /* Tooltip styles */
@@ -146,16 +137,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Text suggestion styles */
-.cm-text-suggestion {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  position: relative !important;
-  border-bottom: 2px dotted var(--accent) !important;
-  z-index: 1 !important;
-}
-
+/* Text suggestion tooltip */
 .cm-suggestion-tooltip {
   position: absolute !important;
   z-index: 100 !important;
@@ -169,61 +151,9 @@ body {
   pointer-events: auto !important;
 }
 
-/* Text suggestion styles */
-.cm-text-suggestion {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  position: relative !important;
-  border-bottom: 2px dotted var(--accent) !important;
-  z-index: 1 !important;
-}
-
-.cm-suggestion-tooltip {
-  position: absolute !important;
-  z-index: 100 !important;
-  background: var(--background) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 4px !important;
-  padding: 8px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-  max-width: 300px !important;
-  white-space: normal !important;
-}
-
 /* Core editor styles */
 .cm-editor {
   position: relative !important;
-}
-
-.cm-line {
-  display: block !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  width: auto !important;
-}
-
-/* List styles */
-.cm-line[data-list-style] {
-  padding-left: 2.5em !important;
-  position: relative !important;
-}
-
-.cm-list-content {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  visibility: visible !important;
-}
-
-/* Text suggestion styles */
-.cm-text-suggestion {
-  display: inline !important;
-  white-space: pre !important;
-  word-break: keep-all !important;
-  position: relative !important;
-  border-bottom: 2px dotted var(--accent) !important;
-  z-index: 1 !important;
 }
 
 .cm-suggestion-tooltip {
@@ -266,15 +196,6 @@ body {
   background: var(--accent) !important;
   color: white !important;
   border-color: var(--accent) !important;
-}
-
-/* Text suggestion styling */
-.cm-text-suggestion {
-  display: inline !important;
-  white-space: pre !important;
-  position: relative !important;
-  border-bottom: 2px dotted var(--accent) !important;
-  padding-bottom: 1px !important;
 }
 
 /* Hide markdown syntax */
@@ -494,4 +415,4 @@ body {
 /* Nested list indentation */
 .cm-line[data-list-level="1"] { padding-left: 3em !important; }
 .cm-line[data-list-level="2"] { padding-left: 4.5em !important; }
-.cm-line[data-list-level="3"] { padding-left: 6em !important; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+.cm-line[data-list-level="3"] { padding-left: 6em !important; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          

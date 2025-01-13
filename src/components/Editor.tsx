@@ -20,29 +20,29 @@ const Editor: React.FC = () => {
 2. Second list itemm
 3. Third list item
 
-The list above should show properly with suggestions.`;
+Testing list rendering with suggestions.`;
 
-    // Clean up existing view
-    if (viewRef.current) {
-      viewRef.current.destroy();
-    }
-
-    // Create new editor state with proper list handling
+    // Create editor state with proper configuration
     const editorState = EditorState.create({
       doc: initialContent,
-      extensions: [
-        ...createEditorConfig(editorRef),
-        EditorView.lineWrapping
-      ]
+      extensions: createEditorConfig(editorRef)
     });
-    
-    // Create and mount editor view
+
+    // Create view with proper update scheduling
+    let isUpdating = false;
     const view = new EditorView({
       state: editorState,
-      parent: editorRef.current
+      parent: editorRef.current,
+      dispatch: (tr) => {
+        if (isUpdating) return;
+        isUpdating = true;
+        Promise.resolve().then(() => {
+          view.update([tr]);
+          isUpdating = false;
+        });
+      }
     });
-    
-    // Store view reference
+
     viewRef.current = view;
 
     return () => {
@@ -55,4 +55,4 @@ The list above should show properly with suggestions.`;
   return <div ref={editorRef} className="editor" style={{ width: '100%' }} />;
 };
 
-export default Editor;                                                                                                                                                               
+export default Editor;                                                                                                                                                                        

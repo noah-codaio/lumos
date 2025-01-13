@@ -51,47 +51,16 @@ export const createEditorConfig = (
     markdown(),
     syntaxHighlighting(markdownHighlighting),
     keymap.of(defaultKeymap),
+    EditorView.lineWrapping,
     
-    // State fields (must be initialized first)
+    // State fields
     EditorState.allowMultipleSelections.of(true),
     customRewriteState,
     completionState,
     suggestionState,
     suggestionTooltipState,
     
-    // View configuration
-    EditorView.lineWrapping,
-    (() => {
-      let isUpdating = false;
-      return EditorView.updateListener.of(update => {
-        if (!update?.view?.state?.doc) return;
-        
-        // Only handle document changes and ensure no update is in progress
-        if (update.docChanged && !isUpdating) {
-          const view = update.view;
-          
-          // Use microtask to ensure sequential updates
-          isUpdating = true;
-          queueMicrotask(() => {
-            if (view.state) {
-              try {
-                view.dispatch({
-                  changes: update.changes,
-                  effects: [],
-                  annotations: []
-                });
-              } catch (error) {
-                // Silently handle any update errors
-                console.debug('Update error:', error);
-              }
-            }
-            isUpdating = false;
-          });
-        }
-      });
-    })(),
-    
-    // Plugins (initialized after state fields)
+    // Plugins
     hideMarkdownPlugin,
     selectionTrackerPlugin,
     textSuggestionPlugin,
@@ -176,7 +145,11 @@ export const createEditorConfig = (
       }
     }),
     EditorView.updateListener.of(update => {
-      if (update.selectionSet) {
+      if (!update?.view?.state?.doc) return;
+      
+      // Only handle selection changes for completions
+      // Let document changes propagate naturally
+      if (update.selectionSet && !update.docChanged) {
         const selection = update.state.selection.main;
         if (!selection.empty) {
           startCompletion(update.view);
@@ -196,4 +169,4 @@ export const createEditorConfig = (
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

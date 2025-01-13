@@ -67,38 +67,31 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
                   // Add list style decoration with proper attributes
                   const lineAttrs: Record<string, string> = {
                     'data-list-style': isNumbered ? 'number' : 'bullet',
-                    'data-list-level': indent.toString()
+                    'data-list-level': indent.toString(),
+                    'data-list-number': number?.toString() || ''
                   };
-                  
-                  // For numbered lists, ensure number is properly set
-                  if (isNumbered && number !== null) {
-                    lineAttrs['data-list-number'] = number.toString();
-                  }
                   
                   // Add line decoration with list attributes
                   builder.add(line.from, line.to, Decoration.line({
                     attributes: lineAttrs
                   }));
                   
-                  // Hide only the list marker and its trailing space
+                  // Hide the list marker
                   builder.add(innerNode.from, innerNode.to + 1, hideMark);
                   
-                  // Add list content decoration
+                  // Add list content decoration with proper styling
                   const contentStart = innerNode.to + 1;
                   const contentEnd = line.to;
-                  const content = view.state.doc.sliceString(contentStart, contentEnd);
                   
-                  if (content.trim()) {
-                    builder.add(contentStart, contentEnd, Decoration.mark({
-                      class: "cm-list-content",
-                      tagName: "span",
-                      inclusive: true,
-                      attributes: {
-                        'data-content': content.trim(),
-                        'style': 'display: inline !important; white-space: pre !important; word-break: keep-all !important;'
-                      }
-                    }));
-                  }
+                  // Create a decoration for the list content that prevents line breaks
+                  builder.add(contentStart, contentEnd, Decoration.mark({
+                    class: "cm-list-content",
+                    tagName: "span",
+                    inclusive: true,
+                    attributes: {
+                      'style': 'display: inline !important; white-space: pre !important; word-break: keep-all !important;'
+                    }
+                  }));
                   
                   return false;
                 }
@@ -122,4 +115,4 @@ export const hideMarkdownPlugin = ViewPlugin.fromClass(class {
   }
 }, {
   decorations: v => v.decorations
-});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+});                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
