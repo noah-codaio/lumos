@@ -61,34 +61,35 @@ export const createEditorConfig = (
     
     // View configuration
     EditorView.lineWrapping,
-    EditorView.updateListener.of(update => {
-      if (!update?.view?.state?.doc) return;
-      
-      // Only handle document changes
-      if (update.docChanged) {
-        const view = update.view;
-        const changes = update.changes;
+    (() => {
+      let isUpdating = false;
+      return EditorView.updateListener.of(update => {
+        if (!update?.view?.state?.doc) return;
         
-        // Ensure we have a valid state before dispatching
-        if (view.state) {
-          try {
-            // Use Promise to ensure sequential updates
-            Promise.resolve().then(() => {
-              if (view.state) {
+        // Only handle document changes and ensure no update is in progress
+        if (update.docChanged && !isUpdating) {
+          const view = update.view;
+          
+          // Use microtask to ensure sequential updates
+          isUpdating = true;
+          queueMicrotask(() => {
+            if (view.state) {
+              try {
                 view.dispatch({
-                  changes,
+                  changes: update.changes,
                   effects: [],
                   annotations: []
                 });
+              } catch (error) {
+                // Silently handle any update errors
+                console.debug('Update error:', error);
               }
-            });
-          } catch (error) {
-            // Silently handle any update errors
-            console.debug('Update error:', error);
-          }
+            }
+            isUpdating = false;
+          });
         }
-      }
-    }),
+      });
+    })(),
     
     // Plugins (initialized after state fields)
     hideMarkdownPlugin,
@@ -195,4 +196,4 @@ export const createEditorConfig = (
       }
     })
   ];
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
